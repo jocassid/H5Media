@@ -1,0 +1,29 @@
+{% load static %}
+{% comment %}
+
+A template that can be used for login page.  Has CSS, but doesn't load any
+JavaScript.  base.html extends this template, adding JavaScript files and the
+ navbar.
+
+{% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bulma.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+    {% block javascript %}
+    {% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}
+        {% endblock %}
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

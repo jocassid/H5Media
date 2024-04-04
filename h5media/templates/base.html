@@ -1,25 +1,57 @@
+{% extends 'css_only.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>H5Media</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+{% comment %}
+
+A template that adds JavaScript libraries and navbar
+
+{% endcomment %}
+
+{% block javascript %}
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'htmx.min.js' %}"></script>
-</head>
-<body>
-    <header>
-        <nav>
-            <button hx-trigger="click">Menu</button>
-            <div id="menu-contents">
-                
-            </div>
-        </nav>
-        
-    </header>
-    <main>
-        {% block content %}     
-    </main>
+    <script src="{% static 'h5media.js' %}"></script>
 {% endblock %}
-</body>
-</html>
+
+
+{% block header %}
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a role="button"
+               class="navbar-burger"
+               aria-label="menu"
+               aria-expanded="false"
+               data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item">Home</a>
+                <a class="navbar-item">Playlists</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Library</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item">Music</a>
+                        <a class="navbar-item">Audiobooks</a>
+                        <a class="navbar-item">Podcasts</a>
+                        <a class="navbar-item">Videos</a>
+                    </div>
+                </div>
+                <a class="navbar-item">Admin</a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-item">Profile</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+{% endblock header %}
