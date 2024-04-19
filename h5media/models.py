@@ -5,6 +5,7 @@ from django.db.models import (
     CASCADE,
     CharField,
     ForeignKey,
+    URLField,
 )
 
 
@@ -29,7 +30,12 @@ class PlayList(Model):
 
 
 class Podcast(Model):
+
     name = CharField(max_length=200)
+
+    website = URLField(max_length=500, default='')
+    
+    rss = URLField(max_length=500, default='')
 
 
 
