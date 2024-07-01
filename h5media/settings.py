@@ -133,4 +133,4 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 # --------------- #
 # CUSTOM SETTINGS #
 # --------------- #
-MAX_RSS_MB = 5
+MAX_RSS_MB = 10
