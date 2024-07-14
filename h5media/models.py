@@ -10,7 +10,10 @@ from django.db.models import (
     Model,
     CASCADE,
     CharField,
+    DateTimeField,
     ForeignKey,
+    ManyToManyField,
+    OneToOneField,
     TextField,
     URLField,
 )
@@ -41,12 +44,23 @@ class BaseModel(Model):
         self.save()
 
 
+class Profile(BaseModel):
+    user = OneToOneField(
+        User,
+        on_delete=CASCADE,
+        related_name='profile',
+    )
+
+    def __str__(self):
+        return self.user.username
+
+
 class MediaFile(BaseModel):
     """Audio or visual file"""
     title = CharField(max_length=250)
     file_path = CharField(max_length=250)
     owner = ForeignKey(
-        User,
+        Profile,
         on_delete=CASCADE,
         related_name='media_files',
     )
@@ -54,7 +68,7 @@ class MediaFile(BaseModel):
 
 class PlayList(BaseModel):
     owner = ForeignKey(
-        User,
+        Profile,
         on_delete=CASCADE,
         related_name='playlists',
     )
@@ -73,6 +87,12 @@ class Podcast(BaseModel):
 
     description = TextField(default='')
 
+    subscribers = ManyToManyField(
+        Profile,
+        blank=True,
+        related_name='podcasts_subscribed_to',
+    )
+
     def __str__(self):
         return self.title
 
@@ -87,7 +107,10 @@ class Podcast(BaseModel):
 
 class PodcastEpisode(MediaFile):
 
-    update_fields = ('podcast', 'title', 'url', 'description')
+    update_fields = (
+        'podcast', 'title', 'url',
+        'pub_date', 'description',
+    )
 
     podcast = ForeignKey(
         Podcast,
@@ -96,6 +119,11 @@ class PodcastEpisode(MediaFile):
     )
 
     url = URLField(max_length=500, default='', unique=True)
+
+    pub_date = DateTimeField(
+        null=True,
+        blank=True,
+    )
 
     description = TextField(default='')
 

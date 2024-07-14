@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% comment %}
+
+CONTEXT VARIABLES
+-----------------
+subscribed_podcasts:    Podcasts that the user is subscribed to
+
+{% endcomment %}
+
+{% block content %}
+
+<table>
+  <thead>
+    <tr>
+      <td>Title</td>  
+    </tr>
+  </thead>
+  <tbody>
+    {% for podcast in subscribed_podcasts %}
+      <tr>
+        <td>
+          <a href="{% url 'podcast' podcast.pk %}">{{ podcast.title }}</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td>User is subscribed to no podcasts.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+{% endblock %}

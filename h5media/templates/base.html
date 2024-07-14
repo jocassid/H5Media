@@ -37,12 +37,12 @@ A template that adds JavaScript libraries and navbar
                     <div class="navbar-dropdown">
                         <a class="navbar-item">Music</a>
                         <a class="navbar-item">Audiobooks</a>
-                        <a class="navbar-item">Podcasts</a>
+                        <a class="navbar-item" href="{% url 'podcasts' %}">Podcasts</a>
                         <a class="navbar-item">Videos</a>
                     </div>
                 </div>
                 {% if user.is_staff %}
-                    <a class="navbar-item" href="admin/">Admin</a>
+                    <a class="navbar-item" href="/admin/">Admin</a>
                 {% endif %}
             </div>
 

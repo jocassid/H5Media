@@ -1,6 +1,8 @@
 
 from collections import Counter
+from datetime import datetime
 from enum import Enum
+from re import compile as re_compile, IGNORECASE
 from typing import List, Optional
 from xml.sax import parseString
 from xml.sax.handler import ContentHandler
@@ -19,7 +21,6 @@ class DownloadException(RuntimeError):
 
 
 def download_rss(rss_url) -> bytes:
-    print("download_rss")
     timeout_seconds = 30
     try:
         response = get(rss_url, timeout=timeout_seconds)
@@ -62,18 +63,28 @@ class RssHandler(ContentHandler):
 
     elements_of_interest = regular_elements | special_elements
 
+    DATE_FORMATS = [
+        "%a, %d %b %Y %H:%M:%S %z",
+        "%a, %d %b %Y %H:%M:%S %Z",
+    ]
+
     def __init__(self, rss_file_url: str, user: User):
         super().__init__()
 
         self.rss_file_url = rss_file_url
-        self.user = user
+        self.profile = user.profile
 
         self.path_stack = []
         self.errors: List[str] = []
 
-        self.podcast = None
-        self.episode = None
+        self.podcast: Optional[Podcast] = None
+        self.episode: Optional[PodcastEpisode] = None
         self.podcast_episodes: List[PodcastEpisode] = []
+
+        # self.date_regex = re_compile(
+        #     r"([a-z]{3}), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})",
+        #     IGNORECASE,
+        # )
 
     def startElement(self, name, attrs):
         if len(self.path_stack) == 0 and name != 'rss':
@@ -85,9 +96,6 @@ class RssHandler(ContentHandler):
 
         if name in self.regular_elements:
             return
-
-
-
 
         if name == 'channel':
             self.start_channel(attrs)
@@ -113,6 +121,7 @@ class RssHandler(ContentHandler):
             self.end_item()
         else:
             self.errors.append(f"Unsupported end tag {name}")
+
     def characters(self, content):
 
         if len(self.path_stack) < 2:
@@ -135,6 +144,15 @@ class RssHandler(ContentHandler):
             if last_tag == 'title':
                 self.episode.title = content
                 return
+            if last_tag == 'pubDate':
+                for date_format in self.DATE_FORMATS:
+                    try:
+                        pub_date = datetime.strptime(content, date_format)
+                    except ValueError:
+                        pass
+                    else:
+                        self.episode.pub_date = pub_date
+                return
 
     def start_channel(self, attrs) -> None:
         podcast = Podcast(rss=self.rss_file_url)
@@ -142,18 +160,18 @@ class RssHandler(ContentHandler):
         self.podcast = podcast
 
     def end_channel(self) -> None:
-        db_podcast = self.podcast.fetch()
-        if db_podcast:
-            db_podcast.update(self.podcast)
-            return
         self.podcast.save()
 
     def start_item(self, attrs) -> None:
         if not self.podcast:
             self.errors.append("self.podcast not set")
             return
+
+        if not self.podcast.pk:
+            self.podcast.save()
+
         episode = PodcastEpisode(
-            owner=self.user,
+            owner=self.profile,
             podcast=self.podcast,
         )
         episode = episode.fetch() or episode
@@ -171,7 +189,7 @@ class RssHandler(ContentHandler):
         self.episode.url = attrs.get('url')
 
 
-def load_episodes(rss_file_url: str, content: bytes, user: User):
+def load_episodes(rss_file_url: str, content: bytes, user: User) -> None:
 
     content_mb = len(content) / 2**20
     if content_mb > settings.MAX_RSS_MB:
@@ -184,11 +202,6 @@ def load_episodes(rss_file_url: str, content: bytes, user: User):
     for value in Counter(handler.errors).most_common():
         print(value)
 
-    # print(f"{content_mb = }")
-    #
-    # # print(response.content)
-    # # print(type(response.content))
-    pass
 
 
 

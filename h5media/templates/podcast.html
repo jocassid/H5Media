@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% comment %}
+
+CONTEXT VARIABLES
+-----------------
+subscribed_podcasts:    Podcasts that the user is subscribed to
+
+{% endcomment %}
+
+{% block content %}
+
+  {% with podcast=object %}
+    
+    
+    <h1>{{ podcast.title }}</h1>
+    <a href="{{ podcast.website }}">{{ podcast.website }}</a>  
+    <p>{{ podcast.description }}</p>  
+{#    <p>{{ object.content }}</p>#}
+{#    <p>Reporter: {{ object.reporter }}</p>#}
+{#    <p>Published: {{ object.pub_date|date }}</p>#}
+{#    <p>Date: {{ now|date }}</p>    #}
+
+    <div id="podcast-episode_list" 
+         hx-get="{% url 'podcast_episodes' podcast.pk %}"
+         hx-trigger="load">
+    
+    </div>
+    
+  {% endwith %}
+{% endblock %}

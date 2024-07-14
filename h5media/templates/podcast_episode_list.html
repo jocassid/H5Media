@@ -1,0 +1,29 @@
+{% comment %}
+
+{% endcomment %}
+<table>
+  <thead>
+    <tr>
+      <th>Queue</th>  
+      <th>Playlist</th>  
+      <th>Title</th>  
+    </tr>
+  </thead>
+  <tbody>
+    {% for episode in episodes %}
+      <tr>
+        <td>
+          <input type="checkbox"/>  
+        </td>
+        <td>
+          <input type="checkbox"/>
+        </td>
+        <td>{{ episode.title }}</td>  
+      </tr>
+    {% empty %}
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
