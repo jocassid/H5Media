@@ -16,7 +16,7 @@ JavaScript.  base.html extends this template, adding JavaScript files and the
     {% block javascript %}
     {% endblock %}
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <header>
         {% block header %}
         {% endblock %}

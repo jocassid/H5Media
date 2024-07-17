@@ -5,7 +5,8 @@
   <thead>
     <tr>
       <th>Queue</th>  
-      <th>Playlist</th>  
+      <th>Playlist</th>
+      <th>Published</th>  
       <th>Title</th>  
     </tr>
   </thead>
@@ -13,11 +14,13 @@
     {% for episode in episodes %}
       <tr>
         <td>
-          <input type="checkbox"/>  
+            <button class="button is-dark"
+                    hx-post="{% url 'podcast_episode_add_to_queue' episode.pk %}">Queue</button>  
         </td>
         <td>
-          <input type="checkbox"/>
+            <button class="button is-dark">Play List</button>
         </td>
+        <td>{{ episode.pub_date|date:"Y-m-d" }}</td>  
         <td>{{ episode.title }}</td>  
       </tr>
     {% empty %}

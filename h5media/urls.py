@@ -24,6 +24,7 @@ from django.urls import path
 
 from h5media.views import (
     HomeView,
+    PodcastEpisodeAddToQueueView,
     PodcastEpisodeListView,
     PodcastView,
     PodcastsView,
@@ -59,7 +60,12 @@ urlpatterns = [
     path(
         'podcasts/<int:pk>/episodes/',
         PodcastEpisodeListView.as_view(),
-        name='podcast_episodes',
+        name='podcast_episode_list',
+    ),
+    path(
+        'podcasts/episodes/<int:pk>/queue-add/',
+        PodcastEpisodeAddToQueueView.as_view(),
+        name='podcast_episode_add_to_queue',
     ),
     path(
         '',

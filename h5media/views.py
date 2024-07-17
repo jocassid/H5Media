@@ -1,5 +1,10 @@
 
+from http import HTTPStatus
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 
@@ -14,6 +19,26 @@ class BaseView(LoginRequiredMixin, TemplateView):
 class BaseDetailView(LoginRequiredMixin, DetailView):
     """Abstract class"""
     pass
+
+
+class BasePostView(LoginRequiredMixin, View):
+
+    template_name = 'SUBCLASSES SHOULD RE-DEFINE THIS'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.response_status: int = HTTPStatus.OK.value
+
+    def post(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            self.get_context_data(**kwargs),
+            status=self.response_status
+        )
+
+    def get_context_data(self, **kwargs):
+        return {}
 
 
 class PageView(BaseView):
@@ -68,7 +93,20 @@ class PodcastEpisodeListView(BaseView):
             'pub_date'
         )
 
+        paginator = Paginator(episodes, 25)
+        episodes = paginator.page(1)
+
         return {'episodes': episodes}
+
+
+class PodcastEpisodeAddToQueueView(BasePostView):
+    """Add Podcast to the user's queue.  return html for "in queue" button"""
+
+    template_name = ''
+
+    # def post(self, *args, **kwargs):
+    #     raise NotImplementedError("This should return a response")
+
 
 
 
