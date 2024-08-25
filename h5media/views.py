@@ -3,12 +3,28 @@ from http import HTTPStatus
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from django.http import HttpRequest
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 
 from h5media.models import Podcast, PodcastEpisode, Profile
+
+
+class ApiError(RuntimeError):
+    def __init__(self, message: str, status: int = 400):
+        super().__init__(message)
+        self.status = status
+
+
+def error_response(request: HttpRequest, api_error: ApiError):
+    return render(
+        request,
+        'error.html',
+        {'error': str(api_error)},
+        status=api_error.status,
+    )
 
 
 class BaseView(LoginRequiredMixin, TemplateView):
@@ -30,14 +46,19 @@ class BasePostView(LoginRequiredMixin, View):
         self.response_status: int = HTTPStatus.OK.value
 
     def post(self, request, *args, **kwargs):
-        return render(
-            request,
-            self.template_name,
-            self.get_context_data(**kwargs),
-            status=self.response_status
-        )
+        try:
+            return render(
+                request,
+                self.template_name,
+                self.get_context_data(**kwargs),
+                status=self.response_status
+            )
+        except ApiError as error:
+            return error_response(request, error)
 
     def get_context_data(self, **kwargs):
+        """Subclasses may override this to update records in the database and
+        provide any data needed to render a response"""
         return {}
 
 
@@ -102,10 +123,18 @@ class PodcastEpisodeListView(BaseView):
 class PodcastEpisodeAddToQueueView(BasePostView):
     """Add Podcast to the user's queue.  return html for "in queue" button"""
 
-    template_name = ''
+    template_name = 'partial/in_queue_button.html'
 
-    # def post(self, *args, **kwargs):
-    #     raise NotImplementedError("This should return a response")
+    def get_context_data(self, **kwargs):
+        pk = kwargs.get('pk') or 0
+        if not pk:
+            raise ApiError("missing pk", 400)
+
+        if not PodcastEpisode.objects.filter(pk=pk).exists():
+            raise ApiError("No podcast episode found", 404)
+
+        print(f"{kwargs=}")
+        return {}
 
 
 

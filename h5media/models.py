@@ -12,6 +12,7 @@ from django.db.models import (
     CharField,
     DateTimeField,
     ForeignKey,
+    IntegerField,
     ManyToManyField,
     OneToOneField,
     TextField,
@@ -63,6 +64,29 @@ class MediaFile(BaseModel):
         Profile,
         on_delete=CASCADE,
         related_name='media_files',
+    )
+
+
+class MediaQueue(BaseModel):
+
+    class Meta:
+        unique_together = ['profile', 'media_file', 'order']
+
+    profile = ForeignKey(
+        Profile,
+        related_name='media_queue',
+        on_delete=CASCADE,
+    )
+
+    media_file = ForeignKey(
+        MediaFile,
+        related_name='queued_files',
+        on_delete=CASCADE,
+    )
+
+    order = IntegerField(
+        blank=False,
+        default=10,
     )
 
 

@@ -10,9 +10,13 @@ JavaScript.  base.html extends this template, adding JavaScript files and the
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+{#    <meta name="htmx-config" content='{% block htmx_config %}{% endblock %}'>#}
     <title>H5Media - {{ page_title_suffix }}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'bulma.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'fontawesome/css/fontawesome.css' %}"/>
+    <link rel="stylesheet" href="{% static 'fontawesome/css/brands.css' %}"/>
+    <link rel="stylesheet" href="{% static 'fontawesome/css/solid.css'%}"/>
     {% block javascript %}
     {% endblock %}
 </head>

@@ -1,3 +1,4 @@
+{% load static %}
 {% comment %}
 
 {% endcomment %}
@@ -14,11 +15,22 @@
     {% for episode in episodes %}
       <tr>
         <td>
-            <button class="button is-dark"
-                    hx-post="{% url 'podcast_episode_add_to_queue' episode.pk %}">Queue</button>  
+          <button class="button is-primary is-outlined"
+                  hx-post="{% url 'podcast_episode_add_to_queue' episode.pk %}"
+                  hx-swap="outerHTML"
+                  hx-ext="response-targets"
+                  hx-target-error="#alerts">
+            <span class="icon is-small">
+              <i class="fa-solid fa-play"></i>
+            </span>
+          </button>  
         </td>
         <td>
-            <button class="button is-dark">Play List</button>
+          <button class="button is-primary is-outlined">
+            <span class="icon is-small">    
+              <i class="fa-solid fa-list"></i>
+            </span>    
+          </button>
         </td>
         <td>{{ episode.pub_date|date:"Y-m-d" }}</td>  
         <td>{{ episode.title }}</td>  

@@ -4,3 +4,5 @@
 db.sqlite3
 *.log
 rss_cache/
+unpack/
+fontawesome-free-6.6.0-web/
