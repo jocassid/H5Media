@@ -2,7 +2,10 @@
 from http import HTTPStatus
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
+from django.core.serializers import serialize
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.views import View
@@ -10,6 +13,7 @@ from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 
 from h5media.models import Podcast, PodcastEpisode, Profile
+from h5media.serializers import MediaFileSerializer
 
 
 class ApiError(RuntimeError):
@@ -37,9 +41,7 @@ class BaseDetailView(LoginRequiredMixin, DetailView):
     pass
 
 
-class BasePostView(LoginRequiredMixin, View):
-
-    template_name = 'SUBCLASSES SHOULD RE-DEFINE THIS'
+class BasePostView(BaseView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -75,6 +77,9 @@ class HomeView(PageView):
     template_name = 'home.html'
     page_title_suffix = 'Home'
 
+    def get_context_data(self, **kwargs):
+        return {}
+
 
 class PodcastsView(PageView):
     template_name = 'podcasts.html'
@@ -83,9 +88,9 @@ class PodcastsView(PageView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        profile: Profile = self.request.user.profile
+        user: User = self.request.user
         context['subscribed_podcasts'] = Podcast.objects.filter(
-            subscribers=profile
+            subscribers=user,
         )
         return context
 
@@ -126,18 +131,28 @@ class PodcastEpisodeAddToQueueView(BasePostView):
     template_name = 'partial/in_queue_button.html'
 
     def get_context_data(self, **kwargs):
-        pk = kwargs.get('pk') or 0
-        if not pk:
+        return self.get_context_data_inner(
+            episode_pk=kwargs.get('pk') or 0,
+            user=self.request.user
+        )
+
+    @staticmethod
+    def get_context_data_inner(episode_pk: int, user: User):
+        if not episode_pk:
             raise ApiError("missing pk", 400)
 
-        if not PodcastEpisode.objects.filter(pk=pk).exists():
+        try:
+            episode = PodcastEpisode.objects.get(pk=episode_pk)
+        except ObjectDoesNotExist:
             raise ApiError("No podcast episode found", 404)
 
-        print(f"{kwargs=}")
+        profile = user.profile
+        if not profile:
+            raise ApiError(f"User {user.username} missing profile")
+
+        data = MediaFileSerializer(episode).data
+
+        profile.queue.append(data)
+        profile.save()
+
         return {}
-
-
-
-
-
-

@@ -1,5 +1,6 @@
 
-from typing import Iterable, Optional, Tuple
+from collections.abc import Iterable
+from typing import Optional, Tuple
 
 from django.contrib.auth.models import User
 from django.core.exceptions import (
@@ -13,11 +14,18 @@ from django.db.models import (
     DateTimeField,
     ForeignKey,
     IntegerField,
+    JSONField,
     ManyToManyField,
+    Max,
     OneToOneField,
     TextField,
     URLField,
 )
+from django.db.transaction import atomic
+
+
+class DatabaseError(RuntimeError):
+    pass
 
 
 class BaseModel(Model):
@@ -52,6 +60,10 @@ class Profile(BaseModel):
         related_name='profile',
     )
 
+    queue = JSONField(
+        default=list,
+    )
+
     def __str__(self):
         return self.user.username
 
@@ -61,38 +73,15 @@ class MediaFile(BaseModel):
     title = CharField(max_length=250)
     file_path = CharField(max_length=250)
     owner = ForeignKey(
-        Profile,
+        User,
         on_delete=CASCADE,
         related_name='media_files',
     )
 
 
-class MediaQueue(BaseModel):
-
-    class Meta:
-        unique_together = ['profile', 'media_file', 'order']
-
-    profile = ForeignKey(
-        Profile,
-        related_name='media_queue',
-        on_delete=CASCADE,
-    )
-
-    media_file = ForeignKey(
-        MediaFile,
-        related_name='queued_files',
-        on_delete=CASCADE,
-    )
-
-    order = IntegerField(
-        blank=False,
-        default=10,
-    )
-
-
 class PlayList(BaseModel):
     owner = ForeignKey(
-        Profile,
+        User,
         on_delete=CASCADE,
         related_name='playlists',
     )
@@ -112,7 +101,7 @@ class Podcast(BaseModel):
     description = TextField(default='')
 
     subscribers = ManyToManyField(
-        Profile,
+        User,
         blank=True,
         related_name='podcasts_subscribed_to',
     )
