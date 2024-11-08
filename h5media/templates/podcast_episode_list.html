@@ -1,0 +1,44 @@
+{% load static %}
+{% comment %}
+
+{% endcomment %}
+<table>
+  <thead>
+    <tr>
+      <th>Queue</th>  
+      <th>Playlist</th>
+      <th>Published</th>  
+      <th>Title</th>  
+    </tr>
+  </thead>
+  <tbody>
+    {% for episode in episodes %}
+      <tr>
+        <td>
+          <button class="button is-primary is-outlined"
+                  hx-post="{% url 'podcast_episode_add_to_queue' episode.pk %}"
+                  hx-swap="outerHTML"
+                  hx-ext="response-targets"
+                  hx-target-error="#alerts">
+            <span class="icon is-small">
+              <i class="fa-solid fa-play"></i>
+            </span>
+          </button>  
+        </td>
+        <td>
+          <button class="button is-primary is-outlined">
+            <span class="icon is-small">    
+              <i class="fa-solid fa-list"></i>
+            </span>    
+          </button>
+        </td>
+        <td>{{ episode.pub_date|date:"Y-m-d" }}</td>  
+        <td>{{ episode.title }}</td>  
+      </tr>
+    {% empty %}
+    {% endfor %}
+  </tbody>
+</table>
+
+
+

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% comment %}
+
+CONTEXT VARIABLES
+-----------------
+subscribed_podcasts:    Podcasts that the user is subscribed to
+
+{% endcomment %}
+
+{% block content %}
+
+  {% with podcast=object %}
+    
+    <div class="podcast-description">
+      <h1>{{ podcast.title }}</h1>
+      <a href="{{ podcast.website }}">{{ podcast.website }}</a>  
+      <p>{{ podcast.description }}</p>
+    </div>
+      
+    <div hx-get="{% url 'podcast_episode_list' podcast.pk %}?page=1"
+         hx-trigger="load">
+    
+    </div>
+    <div id="addToPlaylistDialog" class="add-to-playlist-dialog"></div>  
+    
+  {% endwith %}
+{% endblock %}

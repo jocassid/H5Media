@@ -1,0 +1,3 @@
+# requirements specifically for development
+
+Faker==28.0.0

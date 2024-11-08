@@ -22,7 +22,13 @@ from django.contrib.auth.views import (
 )
 from django.urls import path
 
-from h5media.views import HomeView
+from h5media.views import (
+    HomeView,
+    PodcastEpisodeAddToQueueView,
+    PodcastEpisodeListView,
+    PodcastView,
+    PodcastsView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,6 +46,26 @@ urlpatterns = [
         'password-reset/',
         PasswordResetView.as_view(template_name="password_reset.html"),
         name='password_reset',
+    ),
+    path(
+        'podcasts/',
+        PodcastsView.as_view(),
+        name='podcasts',
+    ),
+    path(
+        'podcasts/<int:pk>/',
+        PodcastView.as_view(),
+        name='podcast',
+    ),
+    path(
+        'podcasts/<int:pk>/episodes/',
+        PodcastEpisodeListView.as_view(),
+        name='podcast_episode_list',
+    ),
+    path(
+        'podcasts/episodes/<int:pk>/queue-add/',
+        PodcastEpisodeAddToQueueView.as_view(),
+        name='podcast_episode_add_to_queue',
     ),
     path(
         '',

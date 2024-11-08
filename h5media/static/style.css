@@ -5,7 +5,6 @@
     border: dashed white 0.125rem;
 }
 
-
 div.login{
     width: fit-content;
     margin-top: 2rem;
@@ -20,3 +19,30 @@ div.login > form{
     column-gap: 1rem;
 }
 
+table{
+    & thead, & tbody{
+        & tr{
+            & th, & td{
+                padding-right: 1rem;
+                padding-bottom: 0.5rem;
+            }
+        }
+    }
+}
+
+
+body{
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    & main{
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+
+        & div.podcast-description{
+            margin-bottom: 1.5rem;
+        }
+
+
+    }
+}
