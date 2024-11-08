@@ -1,2 +1,2 @@
 # H5Media
-Media player app written usin HTML5
+Media player app written using HTML5

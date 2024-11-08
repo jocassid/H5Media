@@ -1,8 +1,9 @@
 
+from django.conf import settings
+
 from requests import codes, get
 from requests.exceptions import Timeout
 
-import settings
 
 
 class DownloadException(RuntimeError):
