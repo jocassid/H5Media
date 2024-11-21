@@ -1,5 +1,6 @@
 
 from http import HTTPStatus
+from logging import getLogger
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -14,6 +15,9 @@ from django.views.generic.detail import DetailView
 
 from h5media.models import Podcast, PodcastEpisode, Profile
 from h5media.serializers import MediaFileSerializer
+
+
+logger = getLogger('web')
 
 
 class ApiError(RuntimeError):
@@ -33,7 +37,11 @@ def error_response(request: HttpRequest, api_error: ApiError):
 
 class BaseView(LoginRequiredMixin, TemplateView):
     """Abstract class"""
-    pass
+    def get_context_data(self, **kwargs):
+        request = self.request
+        logger.info(f"{request.user} {dir(request)}")
+        return {}
+
 
 
 class BaseDetailView(LoginRequiredMixin, DetailView):
@@ -48,6 +56,7 @@ class BasePostView(BaseView):
         self.response_status: int = HTTPStatus.OK.value
 
     def post(self, request, *args, **kwargs):
+
         try:
             return render(
                 request,
@@ -68,9 +77,9 @@ class PageView(BaseView):
     page_title_suffix = ''
 
     def get_context_data(self, **kwargs):
-        return {
-            'page_title_suffix': self.page_title_suffix
-        }
+        context = super().get_context_data(**kwargs)
+        context['page_title_suffix'] = self.page_title_suffix
+        return context
 
 
 class HomeView(PageView):

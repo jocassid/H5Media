@@ -132,7 +132,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "standard": {
-            "format": "{levelname}|{asctime}|{module}|{message}",
+            "format": "{levelname}:{asctime}:{module}:{message}",
             "style": "{",
         },
     },
@@ -140,12 +140,13 @@ LOGGING = {
         "django_log_file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": join(BASE_DIR, 'django.log'),
+            "filename": join(BASE_DIR, 'logs', 'django.log'),
+            'formatter': 'standard',
         },
         'web_handler': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': join(BASE_DIR, 'web.log'),
+            'filename': join(BASE_DIR, 'logs', 'web.log'),
             'formatter': 'standard',
         }
     },

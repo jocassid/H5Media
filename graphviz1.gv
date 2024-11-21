@@ -1,0 +1,17 @@
+// Graph Label
+digraph graphviz1 {
+	graph [splines=ortho]
+	node [shape=rectangle]
+	LoginRequiredMixin
+	TemplateView
+	DetailView
+	BaseView
+	PageView [label=<<table><tr><td>PageView</td></tr><tr><td>page_title_suffix</td></tr></table>> shape=plain]
+	BasePostView [label=<<table><tr><td>BasePostView</td></tr><tr><td>post()</td></tr></table>> shape=plain]
+	LoginRequiredMixin -> BaseView [arrowtail=empty dir=back]
+	TemplateView -> BaseView [arrowtail=empty dir=back]
+	LoginRequiredMixin -> BaseDetailView [arrowtail=empty dir=back]
+	DetailView -> BaseDetailView [arrowtail=empty dir=back]
+	BaseView -> PageView [arrowtail=empty dir=back]
+	BaseView -> BasePostView [arrowtail=empty dir=back]
+}
