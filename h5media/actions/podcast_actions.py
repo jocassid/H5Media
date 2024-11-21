@@ -13,6 +13,8 @@ from requests.exceptions import Timeout
 from django.conf import settings
 from django.contrib.auth.models import User
 
+
+from h5media.actions.actions import Action
 from h5media.models import Podcast, PodcastEpisode
 
 
@@ -188,6 +190,11 @@ class RssHandler(ContentHandler):
     def start_enclosure(self, attrs):
         self.episode.url = attrs.get('url')
 
+
+class LoadEpisodesAction(Action):
+
+    def __init__(self, rss_file_url: str, user: User):
+        pass
 
 def load_episodes(rss_file_url: str, content: bytes, user: User) -> None:
 
