@@ -15,7 +15,7 @@ JavaScript.  base.html extends this template, adding JavaScript files and the
     <link rel="stylesheet" type="text/css" href="{% static 'bulma.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
     <link rel="stylesheet" href="{% static 'fontawesome/css/fontawesome.css' %}"/>
-    <link rel="stylesheet" href="{% static 'fontawesome/css/brands.css' %}"/>
+{#    <link rel="stylesheet" href="{% static 'fontawesome/css/brands.css' %}"/>#}
     <link rel="stylesheet" href="{% static 'fontawesome/css/solid.css'%}"/>
     {% block javascript %}
     {% endblock %}
@@ -26,6 +26,8 @@ JavaScript.  base.html extends this template, adding JavaScript files and the
         {% endblock %}
     </header>
     <main>
+        {% block top_controls %}
+        {% endblock %}
         {% block content %}
         {% endblock %}
     </main>

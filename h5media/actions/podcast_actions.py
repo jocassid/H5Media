@@ -74,7 +74,7 @@ class RssHandler(ContentHandler):
         super().__init__()
 
         self.rss_file_url = rss_file_url
-        self.profile = user.profile
+        self.user = user
 
         self.path_stack = []
         self.errors: List[str] = []
@@ -173,7 +173,7 @@ class RssHandler(ContentHandler):
             self.podcast.save()
 
         episode = PodcastEpisode(
-            owner=self.profile,
+            owner=self.user,
             podcast=self.podcast,
         )
         episode = episode.fetch() or episode
@@ -195,6 +195,7 @@ class LoadEpisodesAction(Action):
 
     def __init__(self, rss_file_url: str, user: User):
         pass
+
 
 def load_episodes(rss_file_url: str, content: bytes, user: User) -> None:
 

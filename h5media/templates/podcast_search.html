@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load podcasts %}
+{%  comment %}
+
+CONTEXT VARIABLES
+-----------------
+
+
+{% endcomment %}
+
+{% block top_controls %}
+
+<form action="{% url 'podcast_search' %}" 
+      method="get">
+  <div class="top_controls podcast_search_controls">
+    <label for="search" class="label">Search:</label>  
+    <input id="search"
+           name="search"
+           type="text"
+           value="{{ search }}"
+           class="input is-primary"/>
+    <button class="button is-primary">
+      <i class="fa-solid fa-magnifying-glass"></i>      
+    </button>
+  </div>
+</form>        
+
+{% endblock %}
+
+{% block content %}
+
+{% if podcasts %}
+  <table>
+    <thead>
+      <tr>
+        <th>Subscribed</th>  
+        <th>Title</th>  
+      </tr>
+    </thead>
+    <tbody>
+    {% for podcast in podcasts %}
+      <tr>
+        <td>
+            <input type="checkbox"/>
+        </td>
+        <td>
+          <a href="{% url 'podcast' podcast.pk %}">{{ podcast.title }}</a>
+        </td>
+      </tr>  
+    {% endfor %}
+    </tbody>  
+{% else %}
+  {% if search %}  
+    <p>No results found.  Click here to search on 
+      <a href="{% podcast_index_url search %}">podcastindex.org</a>
+    </p>
+  {% endif %}    
+{% endif %}
+
+{% endblock %}

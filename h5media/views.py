@@ -38,10 +38,11 @@ def error_response(request: HttpRequest, api_error: ApiError):
 class BaseView(LoginRequiredMixin, TemplateView):
     """Abstract class"""
     def get_context_data(self, **kwargs):
-        request = self.request
-        logger.info(f"{request.user} {dir(request)}")
+        request: HttpRequest = self.request
+        message = f"user={request.user} path={request.path}"
+        print(message)
+        logger.info(message)
         return {}
-
 
 
 class BaseDetailView(LoginRequiredMixin, DetailView):
@@ -70,7 +71,8 @@ class BasePostView(BaseView):
     def get_context_data(self, **kwargs):
         """Subclasses may override this to update records in the database and
         provide any data needed to render a response"""
-        return {}
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class PageView(BaseView):
@@ -87,7 +89,8 @@ class HomeView(PageView):
     page_title_suffix = 'Home'
 
     def get_context_data(self, **kwargs):
-        return {}
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class PodcastsView(PageView):
@@ -96,12 +99,48 @@ class PodcastsView(PageView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         user: User = self.request.user
         context['subscribed_podcasts'] = Podcast.objects.filter(
             subscribers=user,
         )
         return context
+
+
+class PodcastSearchView(PageView):
+    template_name = 'podcast_search.html'
+    page_title_suffix = 'Podcast Search'
+
+    def get_context_data(self, **kwargs):
+        return self.get_context_data_inner(
+            super().get_context_data(**kwargs),
+            str(self.request.GET.get('search') or '')
+        )
+
+    @staticmethod
+    def get_context_data_inner(
+            context: dict,
+            search: str,
+            user: User,
+    ):
+        if search:
+            podcasts = Podcast.objects.filter(
+                title__icontains=search,
+            ).order_by('title')
+        else:
+            podcasts = Podcast.objects.none()
+
+        subscribed_to = set(
+            user.podcasts_subscribed_to.values_list('pk', flat=True),
+        )
+        for
+
+
+        context.update(
+            search=search,
+            podcasts=list(podcasts),
+        )
+        return context
+
 
 
 class PodcastView(BaseDetailView):
@@ -165,3 +204,18 @@ class PodcastEpisodeAddToQueueView(BasePostView):
         profile.save()
 
         return {}
+
+#
+# class PodcastSearchView(PageView):
+#
+#     page_title_suffix = 'search podcasts'
+#     template_name = 'podcast_search.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#
+#         return context
+
+
+
+

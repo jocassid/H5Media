@@ -26,8 +26,9 @@ from h5media.views import (
     HomeView,
     PodcastEpisodeAddToQueueView,
     PodcastEpisodeListView,
-    PodcastView,
+    PodcastSearchView,
     PodcastsView,
+    PodcastView,
 )
 
 urlpatterns = [
@@ -57,6 +58,14 @@ urlpatterns = [
         PodcastView.as_view(),
         name='podcast',
     ),
+    path(
+        'podcasts/search/',
+        PodcastSearchView.as_view(),
+        name='podcast_search',
+    ),
+    # path(
+    #     'podcats/partial/search_controls'
+    # ),
     path(
         'podcasts/<int:pk>/episodes/',
         PodcastEpisodeListView.as_view(),

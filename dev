@@ -1,0 +1,3 @@
+
+source ../H5Media-venv/bin/activate
+export DJANGO_SETTINGS_MODULE=h5media.settings

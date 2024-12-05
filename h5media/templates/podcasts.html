@@ -7,17 +7,30 @@ subscribed_podcasts:    Podcasts that the user is subscribed to
 
 {% endcomment %}
 
-{% block content %}
+{% block top_controls %}
+    
+<div class="top_controls">
+  <a class="button is-primary" href="{% url 'podcast_search' %}">Find More Podcasts</a> 
+</div>
+    
+{% endblock %}
 
+
+{% block content %}
+    
 <table>
   <thead>
     <tr>
-      <td>Title</td>  
+      <th></th>  
+      <th>Title</th>  
     </tr>
   </thead>
   <tbody>
     {% for podcast in subscribed_podcasts %}
       <tr>
+        <td>
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </td>
         <td>
           <a href="{% url 'podcast' podcast.pk %}">{{ podcast.title }}</a>
         </td>
@@ -29,7 +42,5 @@ subscribed_podcasts:    Podcasts that the user is subscribed to
     {% endfor %}
   </tbody>
 </table>
-
-
-
+    
 {% endblock %}

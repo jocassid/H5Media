@@ -5,7 +5,6 @@ django_init()
 if True:
     from logging import getLogger
     from pathlib import Path
-    from random import choice
     from typing import Iterator, Tuple
     from urllib.parse import urlparse
 
