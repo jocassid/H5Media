@@ -26,10 +26,17 @@ JavaScript.  base.html extends this template, adding JavaScript files and the
         {% endblock %}
     </header>
     <main>
+      <div class="top-controls-container">   
         {% block top_controls %}
         {% endblock %}
+      </div>
+      <div class="content-container">
         {% block content %}
         {% endblock %}
+      </div>
     </main>
+    <footer>
+        <div id="development-container"></div>
+    </footer>
 </body>
 </html>

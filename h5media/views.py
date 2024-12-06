@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.core.serializers import serialize
+from django.db.models import BooleanField, Count, Q
+from django.db.models.functions import Cast
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.views import View
@@ -40,7 +42,6 @@ class BaseView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         request: HttpRequest = self.request
         message = f"user={request.user} path={request.path}"
-        print(message)
         logger.info(message)
         return {}
 
@@ -113,7 +114,8 @@ class PodcastSearchView(PageView):
     def get_context_data(self, **kwargs):
         return self.get_context_data_inner(
             super().get_context_data(**kwargs),
-            str(self.request.GET.get('search') or '')
+            str(self.request.GET.get('search') or ''),
+            self.request.user,
         )
 
     @staticmethod
@@ -123,24 +125,25 @@ class PodcastSearchView(PageView):
             user: User,
     ):
         if search:
-            podcasts = Podcast.objects.filter(
+            podcasts = Podcast.objects.annotate(
+                subscribed=Cast(
+                    Count(
+                        'subscribers',
+                        filter=Q(subscribers=user.id)
+                    ),
+                    output_field=BooleanField(),
+                )
+            ).filter(
                 title__icontains=search,
             ).order_by('title')
         else:
             podcasts = Podcast.objects.none()
-
-        subscribed_to = set(
-            user.podcasts_subscribed_to.values_list('pk', flat=True),
-        )
-        for
-
 
         context.update(
             search=search,
             podcasts=list(podcasts),
         )
         return context
-
 
 
 class PodcastView(BaseDetailView):
@@ -215,6 +218,45 @@ class PodcastEpisodeAddToQueueView(BasePostView):
 #         context = super().get_context_data(**kwargs)
 #
 #         return context
+
+
+class PodcastToggleSubscription(BasePostView):
+    """TODO: This view should toggle the subscription and return
+    <input type='checkbox'/> can create a included template for using in
+    podcast_search.html and to be used by this view."""
+    pass
+
+
+class DevelopmentView(BasePostView):
+
+    template_name = 'partial/development.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        request = self.request
+        method = request.method
+        content_type = request.content_type
+
+        context.update({
+            'method': method,
+            'content_type': content_type,
+        })
+
+        if method == 'POST':
+            if request.POST:
+                context['POST'] = request.POST
+            else:
+                context['body'] = request.body
+
+        return context
+
+
+
+
+
+
+
 
 
 

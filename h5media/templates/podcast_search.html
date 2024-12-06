@@ -29,32 +29,41 @@ CONTEXT VARIABLES
 
 {% block content %}
 
-{% if podcasts %}
-  <table>
-    <thead>
-      <tr>
-        <th>Subscribed</th>  
-        <th>Title</th>  
-      </tr>
-    </thead>
-    <tbody>
-    {% for podcast in podcasts %}
-      <tr>
-        <td>
-            <input type="checkbox"/>
-        </td>
-        <td>
-          <a href="{% url 'podcast' podcast.pk %}">{{ podcast.title }}</a>
-        </td>
-      </tr>  
-    {% endfor %}
-    </tbody>  
-{% else %}
-  {% if search %}  
-    <p>No results found.  Click here to search on 
-      <a href="{% podcast_index_url search %}">podcastindex.org</a>
-    </p>
-  {% endif %}    
-{% endif %}
+  {% if podcasts %}
+    <form>  
+    <table>
+      <thead>
+        <tr>
+          <th>Subscribed</th>  
+          <th>Title</th>  
+        </tr>
+      </thead>
+      <tbody>
+        {% for podcast in podcasts %}
+          <tr>
+            <td>
+                {# TODO: point this at PodcastToggleSubscription #}
+                <input type="checkbox" 
+                       name="podcast_pk"
+                       hx-post="{% url 'development' %}"
+                       hx-target="#development-container"
+                       hx-vals='{"podcast_pk": "{{ podcast.pk }}"}'
+                       {% if podcast.subscribed %}checked{% endif %}/>
+            </td>
+            <td>
+              <a href="{% url 'podcast' podcast.pk %}">{{ podcast.title }}</a>
+            </td>
+          </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
+    </form>  
+  {% else %}
+    {% if search %}  
+      <p>No results found.  Click here to search on 
+        <a href="{% podcast_index_url search %}">podcastindex.org</a>
+      </p>
+    {% endif %}    
+  {% endif %}
 
 {% endblock %}

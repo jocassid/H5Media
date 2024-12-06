@@ -23,6 +23,7 @@ from django.contrib.auth.views import (
 from django.urls import path
 
 from h5media.views import (
+    DevelopmentView,
     HomeView,
     PodcastEpisodeAddToQueueView,
     PodcastEpisodeListView,
@@ -75,6 +76,11 @@ urlpatterns = [
         'podcasts/episodes/<int:pk>/queue-add/',
         PodcastEpisodeAddToQueueView.as_view(),
         name='podcast_episode_add_to_queue',
+    ),
+    path(
+        'development/',
+        DevelopmentView.as_view(),
+        name='development'
     ),
     path(
         '',
