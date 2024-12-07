@@ -1,6 +1,7 @@
 
 from http import HTTPStatus
 from logging import getLogger
+from typing import List, Union
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -23,16 +24,31 @@ logger = getLogger('web')
 
 
 class ApiError(RuntimeError):
-    def __init__(self, message: str, status: int = 400):
-        super().__init__(message)
+    def __init__(
+            self,
+            message_or_messages: Union[str, List[str]],
+            status: int = 400,
+    ):
+        if isinstance(message_or_messages, list):
+            messages = message_or_messages
+            super().__init__(messages[0])
+            self.messages = messages
+        else:
+            message = str(message_or_messages)
+            super().__init__(message)
+            self.messages = [message]
         self.status = status
+
+    @property
+    def has_multiple_messages(self):
+        return len(self.messages) > 1
 
 
 def error_response(request: HttpRequest, api_error: ApiError):
     return render(
         request,
         'error.html',
-        {'error': str(api_error)},
+        {'api_error': api_error},
         status=api_error.status,
     )
 
@@ -221,10 +237,49 @@ class PodcastEpisodeAddToQueueView(BasePostView):
 
 
 class PodcastToggleSubscription(BasePostView):
-    """TODO: This view should toggle the subscription and return
-    <input type='checkbox'/> can create a included template for using in
+    """<input type='checkbox'/> can create a included template for using in
     podcast_search.html and to be used by this view."""
-    pass
+    template_name = 'partial/podcast_subscribe_checkbox.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        request = self.request
+
+        errors = []
+        status = HTTPStatus.OK
+
+        user = getattr(request, 'user', None)
+        if not user:
+            errors.append("missing user")
+            status = HTTPStatus.BAD_REQUEST
+
+        podcast_pk = request.POST.get('podcast_pk') or 0
+        if not podcast_pk:
+            errors.append('missing podcast_pk')
+            status = HTTPStatus.BAD_REQUEST
+
+        if errors:
+            raise ApiError(errors, status=status)
+
+        try:
+            podcast = Podcast.objects.get(pk=podcast_pk)
+        except ObjectDoesNotExist:
+            raise ApiError(
+                f"Podcast (PK={podcast_pk}) not found",
+                status=HTTPStatus.NOT_FOUND,
+            )
+
+        if podcast in user.podcasts_subscribed_to.all():
+            user.podcasts_subscribed_to.remove(podcast)
+            subscribed = False
+        else:
+            user.podcasts_subscribed_to.add(podcast)
+            subscribed = True
+
+        setattr(podcast, 'subscribed', subscribed)
+        context['podcast'] = podcast
+        return context
 
 
 class DevelopmentView(BasePostView):

@@ -1,1 +1,11 @@
-<div>{{ error }}</div>
+<div>
+{% if api_error.has_multiple_messages %}
+  <ul>
+    {% for message in api_error.messages %}
+      <li>{{ message }}</li>  
+    {% endfor %}
+  </ul>
+{% else %}
+  <div>{{ api_error }}</div>
+{% endif %}
+</div>

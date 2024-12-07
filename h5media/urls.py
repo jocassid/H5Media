@@ -28,6 +28,7 @@ from h5media.views import (
     PodcastEpisodeAddToQueueView,
     PodcastEpisodeListView,
     PodcastSearchView,
+    PodcastToggleSubscription,
     PodcastsView,
     PodcastView,
 )
@@ -76,6 +77,11 @@ urlpatterns = [
         'podcasts/episodes/<int:pk>/queue-add/',
         PodcastEpisodeAddToQueueView.as_view(),
         name='podcast_episode_add_to_queue',
+    ),
+    path(
+        'podcasts/toggle_subscription/',
+        PodcastToggleSubscription.as_view(),
+        name='podcast_toggle_subscription',
     ),
     path(
         'development/',

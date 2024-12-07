@@ -1,0 +1,12 @@
+{% comment %}
+
+CONTEXT VARIABLES
+-----------------
+podcast:    a Podcast instance annotated with a subscribed field indicating whether
+
+{% endcomment %}
+{# TODO: point this at PodcastToggleSubscription #}
+<input type="checkbox"
+       hx-post="{% url 'podcast_toggle_subscription' %}"
+       hx-vals='{"podcast_pk": "{{ podcast.pk }}"}'
+       {% if podcast.subscribed %}checked{% endif %}/>

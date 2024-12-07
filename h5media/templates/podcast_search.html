@@ -42,13 +42,7 @@ CONTEXT VARIABLES
         {% for podcast in podcasts %}
           <tr>
             <td>
-                {# TODO: point this at PodcastToggleSubscription #}
-                <input type="checkbox" 
-                       name="podcast_pk"
-                       hx-post="{% url 'development' %}"
-                       hx-target="#development-container"
-                       hx-vals='{"podcast_pk": "{{ podcast.pk }}"}'
-                       {% if podcast.subscribed %}checked{% endif %}/>
+                {% include 'partial/podcast_subscribe_checkbox.html' with podcast=podcast %}
             </td>
             <td>
               <a href="{% url 'podcast' podcast.pk %}">{{ podcast.title }}</a>
