@@ -60,10 +60,6 @@ class Profile(BaseModel):
         related_name='profile',
     )
 
-    queue = JSONField(
-        default=list,
-    )
-
     def __str__(self):
         return self.user.username
 
@@ -76,6 +72,26 @@ class MediaFile(BaseModel):
         User,
         on_delete=CASCADE,
         related_name='media_files',
+    )
+
+    TYPE_PODCAST_EPISODE = 'e'
+    TYPE_AUDIOBOOK_CHAPTER = 'c'
+    TYPE_ALBUM_TRACK = 't'
+    TYPE_MEDIA_FILE = 'm'
+
+    TYPE_CHOICES = (
+        (TYPE_PODCAST_EPISODE, 'Podcast Episode'),
+        (TYPE_AUDIOBOOK_CHAPTER, 'Audiobook Chapter'),
+        (TYPE_ALBUM_TRACK, 'Album Track'),
+        (TYPE_MEDIA_FILE, 'Media File')
+    )
+
+    type = CharField(
+        max_length=1,
+        null=False,
+        blank=False,
+        default=TYPE_MEDIA_FILE,
+        choices=TYPE_CHOICES,
     )
 
 
