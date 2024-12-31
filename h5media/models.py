@@ -28,6 +28,21 @@ class DatabaseError(RuntimeError):
     pass
 
 
+class TitledObjectMixin(Model):
+    title = CharField(
+        max_length=250,
+        null=False,
+        blank=False,
+        default='',
+    )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.title
+
+
 class BaseModel(Model):
 
     update_fields = tuple()
@@ -36,6 +51,11 @@ class BaseModel(Model):
         abstract = True
 
     def fetch(self) -> Optional[Model]:
+        """When this method is invoked on an unsaved instance of BaseModel,
+        an attempt will be made to find a matching record in the database.
+        If a matching record is found, the record is returned otherwise None
+        is returned.  Subclasses will override this method to match on
+        whatever fields are appropriate for that Model"""
         return None
 
     def update(
@@ -53,6 +73,10 @@ class BaseModel(Model):
         self.save()
 
 
+def profile_queue_default():
+    return []
+
+
 class Profile(BaseModel):
     user = OneToOneField(
         User,
@@ -60,14 +84,20 @@ class Profile(BaseModel):
         related_name='profile',
     )
 
+    queue = JSONField(
+        null=False,
+        blank=False,
+        default=profile_queue_default
+    )
+
     def __str__(self):
         return self.user.username
 
 
-class MediaFile(BaseModel):
+class MediaFile(TitledObjectMixin, BaseModel):
     """Audio or visual file"""
-    title = CharField(max_length=250)
     file_path = CharField(max_length=250)
+
     owner = ForeignKey(
         User,
         on_delete=CASCADE,
@@ -95,19 +125,30 @@ class MediaFile(BaseModel):
     )
 
 
-class PlayList(BaseModel):
+def playlist_contents_default():
+    return []
+
+
+class PlayList(TitledObjectMixin, BaseModel):
     owner = ForeignKey(
         User,
         on_delete=CASCADE,
         related_name='playlists',
     )
-    name = CharField(max_length=200)
+
+    contents = JSONField(
+        null=False,
+        blank=False,
+        default=playlist_contents_default
+    )
 
 
 class Podcast(BaseModel):
 
     update_fields = ('title', 'website', 'rss', 'description')
 
+    # This class doesn't inherit from TitledObjectMixin because of the
+    # unique constraint on this field.
     title = CharField(max_length=200, unique=True)
 
     website = URLField(max_length=500, default='')
@@ -156,9 +197,6 @@ class PodcastEpisode(MediaFile):
 
     description = TextField(default='')
 
-    def __str__(self):
-        return self.title
-
     def fetch(self) -> Optional[Model]:
         try:
             episode = PodcastEpisode.objects.get(url__iexact=self.url)
@@ -168,6 +206,43 @@ class PodcastEpisode(MediaFile):
             return episode
 
 
+class Audiobook(TitledObjectMixin, BaseModel):
+    pass
+
+
+class AudiobookChapter(MediaFile):
+    audiobook = ForeignKey(
+        Audiobook,
+        related_name='chapters',
+        on_delete=CASCADE
+    )
+
+    chapter = IntegerField(
+        null=False,
+        blank=False,
+        default=0,
+    )
+
+    class Meta:
+        unique_together = [[
+            'audiobook',
+            'chapter'
+        ]]
+
+
+class Album(TitledObjectMixin, BaseModel):
+    pass
+
+
+class AlbumTrack(MediaFile):
+
+    album = ForeignKey(
+        Album,
+        null=True,
+        blank=True,
+        related_name='tracks',
+        on_delete=CASCADE,
+    )
 
 
 
