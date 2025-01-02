@@ -3,7 +3,7 @@
 
 CONTEXT VARIABLES
 -----------------
-subscribed_podcasts:    Podcasts that the user is subscribed to
+podcasts:    All podcasts in database
 
 {% endcomment %}
 
@@ -26,7 +26,7 @@ subscribed_podcasts:    Podcasts that the user is subscribed to
     </tr>
   </thead>
   <tbody>
-    {% for podcast in subscribed_podcasts %}
+    {% for podcast in podcasts %}
       <tr>
         <td>
           <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -37,7 +37,7 @@ subscribed_podcasts:    Podcasts that the user is subscribed to
       </tr>
     {% empty %}
       <tr>
-        <td>User is subscribed to no podcasts.</td>
+        <td>No podcasts in database</td>
       </tr>
     {% endfor %}
   </tbody>

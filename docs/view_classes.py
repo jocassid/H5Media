@@ -39,7 +39,7 @@ def inherits_edge(graph, sub_class, super_classes):
 
 def main():
     graph = Digraph(
-        name='graphviz1',
+        name='view_classes',
         comment='Graph Label',
         format='svg',
         node_attr={
@@ -47,6 +47,7 @@ def main():
         },
         graph_attr={
             'splines': 'ortho',
+            'label': 'H5Media Base View Classes'
         }
     )
 
@@ -54,14 +55,26 @@ def main():
     graph.node('TemplateView')
     graph.node('DetailView')
 
-    graph.node('BaseView')
-
-    class_node(graph, 'PageView', ['page_title_suffix',])
-    class_node(graph, 'BasePostView', methods=['post()'])
+    class_node(graph, 'GetProfileMixin', methods=['get_profile'])
+    class_node(graph, 'BaseView', methods=['get_context_data()'])
+    class_node(
+        graph,
+        'PageView',
+        attributes=['page_title_suffix',],
+        methods=['get_context_data()'],
+    )
+    class_node(
+        graph,
+        'BasePostView',
+        methods=[
+            'get_context_data()',
+            'post()',
+        ],
+    )
 
     inheritance = {
-        'BaseView': ('LoginRequiredMixin', 'TemplateView'),
-        'BaseDetailView': ('LoginRequiredMixin', 'DetailView'),
+        'BaseView': ('LoginRequiredMixin', 'GetProfileMixin', 'TemplateView'),
+        'BaseDetailView': ('LoginRequiredMixin', 'GetProfileMixin', 'DetailView'),
         'PageView': ('BaseView',),
         'BasePostView': ('BaseView',)
     }

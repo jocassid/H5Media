@@ -13,9 +13,14 @@ from requests.exceptions import Timeout
 from django.conf import settings
 from django.contrib.auth.models import User
 
-
 from h5media.actions.actions import Action
-from h5media.models import Podcast, PodcastEpisode
+from h5media.models import (
+    Podcast,
+    PodcastEpisode,
+    profile_queue_default,
+    Profile,
+)
+from h5media.serializers import PodcastEpisodeSerializer
 
 
 class DownloadException(RuntimeError):
@@ -70,11 +75,10 @@ class RssHandler(ContentHandler):
         "%a, %d %b %Y %H:%M:%S %Z",
     ]
 
-    def __init__(self, rss_file_url: str, user: User):
+    def __init__(self, rss_file_url: str):
         super().__init__()
 
         self.rss_file_url = rss_file_url
-        self.user = user
 
         self.path_stack = []
         self.errors: List[str] = []
@@ -173,7 +177,6 @@ class RssHandler(ContentHandler):
             self.podcast.save()
 
         episode = PodcastEpisode(
-            owner=self.user,
             podcast=self.podcast,
         )
         episode = episode.fetch() or episode
@@ -210,6 +213,18 @@ def load_episodes(rss_file_url: str, content: bytes, user: User) -> None:
     for value in Counter(handler.errors).most_common():
         print(value)
 
+
+class AddEpisodeToQueueAction(Action):
+
+    def run(self, episode: PodcastEpisode, profile: Profile):
+        queue = profile.queue
+        if not queue:
+            queue = profile_queue_default()
+        queue.append(
+            PodcastEpisodeSerializer(episode).data,
+        )
+        profile.queue = queue
+        profile.save()
 
 
 

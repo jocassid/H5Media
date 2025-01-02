@@ -1,7 +1,7 @@
 
 from http import HTTPStatus
 from logging import getLogger
-from typing import List, Union
+from typing import Optional, List, Set, Union
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -16,8 +16,14 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 
-from h5media.models import Podcast, PodcastEpisode, Profile
-from h5media.serializers import MediaFileSerializer
+from h5media.actions.podcast_actions import AddEpisodeToQueueAction
+from h5media.models import (
+    MediaFile,
+    Podcast,
+    PodcastEpisode,
+    Profile,
+)
+from h5media.serializers import PodcastEpisodeSerializer
 
 
 logger = getLogger('web')
@@ -53,7 +59,17 @@ def error_response(request: HttpRequest, api_error: ApiError):
     )
 
 
-class BaseView(LoginRequiredMixin, TemplateView):
+class GetProfileMixin:
+
+    @staticmethod
+    def get_profile(request: HttpRequest) -> Optional[Profile]:
+        try:
+            return Profile.objects.get(user=request.user)
+        except ObjectDoesNotExist:
+            return None
+
+
+class BaseView(LoginRequiredMixin, GetProfileMixin, TemplateView):
     """Abstract class"""
     def get_context_data(self, **kwargs):
         request: HttpRequest = self.request
@@ -62,7 +78,7 @@ class BaseView(LoginRequiredMixin, TemplateView):
         return {}
 
 
-class BaseDetailView(LoginRequiredMixin, DetailView):
+class BaseDetailView(LoginRequiredMixin, GetProfileMixin, DetailView):
     """Abstract class"""
     pass
 
@@ -107,6 +123,15 @@ class HomeView(PageView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['MediaFile'] = MediaFile
+
+        profile = self.get_profile(self.request)
+        if profile:
+            queue = profile.queue or []
+        else:
+            queue = []
+
+        context['queue'] = queue
         return context
 
 
@@ -116,10 +141,9 @@ class PodcastsView(PageView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user: User = self.request.user
-        context['subscribed_podcasts'] = Podcast.objects.filter(
-            subscribers=user,
-        )
+        context['podcasts'] = Podcast.objects.prefetch_related(
+            'episodes'
+        ).order_by('title')
         return context
 
 
@@ -163,22 +187,30 @@ class PodcastSearchView(PageView):
 
 
 class PodcastView(BaseDetailView):
+    """Displays Podcast title, url, description along with a list of
+    episodes"""
+
     template_name = 'podcast.html'
     page_title_suffix = 'Podcast'
     model = Podcast
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+        return super().get_context_data(**kwargs)
 
 
 class PodcastEpisodeListView(BaseView):
     template_name = 'podcast_episode_list.html'
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
         podcast_pk = kwargs.get('pk') or 0
         if not podcast_pk:
-            return {'episodes': []}
+            context['episodes'] = []
+            return context
+
+        profile = self.get_profile(self.request)
+        context['in_queue_pks'] = self.get_in_queue_pks(profile)
 
         episodes = PodcastEpisode.objects.filter(
             podcast_id=podcast_pk,
@@ -189,7 +221,33 @@ class PodcastEpisodeListView(BaseView):
         paginator = Paginator(episodes, 25)
         episodes = paginator.page(1)
 
-        return {'episodes': episodes}
+        context['episodes'] = episodes
+        return context
+
+    @staticmethod
+    def get_in_queue_pks(profile: Optional[Profile]) -> Set[int]:
+        """Returns a set of the primary keys for MediaFiles that are in
+        Profile.now_playing or in Profile.queue"""
+        if not profile:
+            return set()
+
+        pks = set()
+
+        now_playing: dict = profile.now_playing
+        if now_playing:
+            pk = now_playing.get('pk') or 0
+            if pk:
+                pks.add(pk)
+
+        queue: List[dict] = profile.queue
+        if not queue:
+            return pks
+
+        for item in queue:
+            pk = item.get('pk') or 0
+            if pk:
+                pks.add(pk)
+        return pks
 
 
 class PodcastEpisodeAddToQueueView(BasePostView):
@@ -200,7 +258,7 @@ class PodcastEpisodeAddToQueueView(BasePostView):
     def get_context_data(self, **kwargs):
         return self.get_context_data_inner(
             episode_pk=kwargs.get('pk') or 0,
-            user=self.request.user
+            user=self.request.user,
         )
 
     @staticmethod
@@ -217,11 +275,7 @@ class PodcastEpisodeAddToQueueView(BasePostView):
         if not profile:
             raise ApiError(f"User {user.username} missing profile")
 
-        data = MediaFileSerializer(episode).data
-
-        profile.queue.append(data)
-        profile.save()
-
+        AddEpisodeToQueueAction().run(episode, profile)
         return {}
 
 #

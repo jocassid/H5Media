@@ -11,14 +11,43 @@ CONTEXT VARIABLES
     
 
 
-<div class="placeholder">Placeholder SVG here</div>
+<div class="placeholder">
+
+</div>
 
 {#<video#}
 {#    controls#}
 {#    width="100%"#}
 {#    src="{% static 'sample_video1.webm' %}"></video>#}
 
-<div class="placeholder">Play Queue</div>
-
+<div class="placeholder">
+  <h1>Play Queue</h1>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in queue %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            {% if item.type == MediaFile.TYPE_PODCAST_EPISODE %}
+              <i class="fa-solid fa-podcast"></i>
+            {% elif item.type == MediaFile.TYPE_AUDIOBOOK_CHAPTER %}
+              <i class="fa-solid fa-book"></i>
+            {% elif item.type == MediaFile.TYPE_ALBUM_TRACK %}
+              <i class="fa-solid fa-music"></i>
+            {% endif %}
+          </td>
+          <td>{{ item.title }}</td>
+        </tr>
+      {% empty %}
+      {% endfor %}
+    </tbody>
+  </table>
 
 {% endblock %}
+
+</div>

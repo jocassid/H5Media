@@ -84,6 +84,12 @@ class Profile(BaseModel):
         related_name='profile',
     )
 
+    now_playing = JSONField(
+        null=False,
+        blank=False,
+        default=dict
+    )
+
     queue = JSONField(
         null=False,
         blank=False,
@@ -96,31 +102,26 @@ class Profile(BaseModel):
 
 class MediaFile(TitledObjectMixin, BaseModel):
     """Audio or visual file"""
-    file_path = CharField(max_length=250)
-
-    owner = ForeignKey(
-        User,
-        on_delete=CASCADE,
-        related_name='media_files',
+    file_path = CharField(
+        max_length=250,
+        null=False,
+        blank=True,
     )
 
     TYPE_PODCAST_EPISODE = 'e'
     TYPE_AUDIOBOOK_CHAPTER = 'c'
     TYPE_ALBUM_TRACK = 't'
-    TYPE_MEDIA_FILE = 'm'
 
     TYPE_CHOICES = (
         (TYPE_PODCAST_EPISODE, 'Podcast Episode'),
         (TYPE_AUDIOBOOK_CHAPTER, 'Audiobook Chapter'),
         (TYPE_ALBUM_TRACK, 'Album Track'),
-        (TYPE_MEDIA_FILE, 'Media File')
     )
 
     type = CharField(
         max_length=1,
         null=False,
-        blank=False,
-        default=TYPE_MEDIA_FILE,
+        blank=True,
         choices=TYPE_CHOICES,
     )
 
@@ -156,12 +157,6 @@ class Podcast(BaseModel):
     rss = URLField(max_length=500, default='', unique=True)
 
     description = TextField(default='')
-
-    subscribers = ManyToManyField(
-        User,
-        blank=True,
-        related_name='podcasts_subscribed_to',
-    )
 
     def __str__(self):
         return self.title

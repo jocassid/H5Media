@@ -1,8 +1,13 @@
 {% load static %}
 {% comment %}
 
+CONTEXT VARIABLES
+-----------------
+episodes:  Iterable of PodcastEpisode Instances
+in_queue_pks:  PKs for media files in Profiles now_playing or queue
+
 {% endcomment %}
-<table>
+<table data-template="podcast_episode_list">
   <thead>
     <tr>
       <th>Queue</th>  
@@ -15,15 +20,19 @@
     {% for episode in episodes %}
       <tr>
         <td>
-          <button class="button is-primary is-outlined"
-                  hx-post="{% url 'podcast_episode_add_to_queue' episode.pk %}"
-                  hx-swap="outerHTML"
-                  hx-ext="response-targets"
-                  hx-target-error="#alerts">
-            <span class="icon is-small">
-              <i class="fa-solid fa-play"></i>
-            </span>
-          </button>  
+          {% if episode.pk in in_queue_pks %}
+            {% include 'partial/in_queue_button.html' %}  
+          {% else %}
+            <button class="button is-primary is-outlined"
+                    hx-post="{% url 'podcast_episode_add_to_queue' episode.pk %}"
+                    hx-swap="outerHTML"
+                    hx-ext="response-targets"
+                    hx-target-error="#alerts">
+              <span class="icon is-small">
+                <i class="fa-solid fa-play"></i>
+              </span>
+            </button>
+          {% endif %}
         </td>
         <td>
           <button class="button is-primary is-outlined">
