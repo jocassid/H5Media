@@ -1,0 +1,20 @@
+// Graph Label
+digraph view_classes {
+	graph [label="H5Media Base View Classes" splines=ortho]
+	node [shape=rectangle]
+	LoginRequiredMixin
+	TemplateView
+	DetailView
+	GetProfileMixin [label=<<table><tr><td>GetProfileMixin</td></tr><tr><td>get_profile</td></tr></table>> shape=plain]
+	BaseView [label=<<table><tr><td>BaseView</td></tr><tr><td>get_context_data()</td></tr></table>> shape=plain]
+	PageView [label=<<table><tr><td>PageView</td></tr><tr><td>page_title_suffix</td></tr><tr><td>get_context_data()</td></tr></table>> shape=plain]
+	BasePostView [label=<<table><tr><td>BasePostView</td></tr><tr><td>get_context_data()<br/>post()</td></tr></table>> shape=plain]
+	LoginRequiredMixin -> BaseView [arrowtail=empty dir=back]
+	GetProfileMixin -> BaseView [arrowtail=empty dir=back]
+	TemplateView -> BaseView [arrowtail=empty dir=back]
+	LoginRequiredMixin -> BaseDetailView [arrowtail=empty dir=back]
+	GetProfileMixin -> BaseDetailView [arrowtail=empty dir=back]
+	DetailView -> BaseDetailView [arrowtail=empty dir=back]
+	BaseView -> PageView [arrowtail=empty dir=back]
+	BaseView -> BasePostView [arrowtail=empty dir=back]
+}

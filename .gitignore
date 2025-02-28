@@ -2,7 +2,7 @@
 .idea/
 **/__pycache__/
 db.sqlite3
-*.log
+logs/
 rss_cache/
 unpack/
-fontawesome-free-6.6.0-web/
+.env

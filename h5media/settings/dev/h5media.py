@@ -1,0 +1,2 @@
+
+PODCASTS_DIR = '//'

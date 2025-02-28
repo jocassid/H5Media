@@ -1,12 +1,20 @@
 {% load static %}
+{% load pagination %}
 {% comment %}
 
 CONTEXT VARIABLES
 -----------------
-episodes:  Iterable of PodcastEpisode Instances
+episodes:  Page object from Paginator
 in_queue_pks:  PKs for media files in Profiles now_playing or queue
 
 {% endcomment %}
+
+{% pagination episodes %}
+
+<div style="border: solid crimson 0.5rem">
+  {{  in_queue_pks }}
+</div>
+
 <table data-template="podcast_episode_list">
   <thead>
     <tr>
@@ -20,6 +28,7 @@ in_queue_pks:  PKs for media files in Profiles now_playing or queue
     {% for episode in episodes %}
       <tr>
         <td>
+          pk={{ episode.pk }}
           {% if episode.pk in in_queue_pks %}
             {% include 'partial/in_queue_button.html' %}  
           {% else %}
@@ -48,6 +57,15 @@ in_queue_pks:  PKs for media files in Profiles now_playing or queue
     {% endfor %}
   </tbody>
 </table>
+
+
+
+
+{#<div>#}
+{#  {% if episodes.has_previous %}#}
+{#    <a href="">1</a>#}
+{#  {% endif %}#}
+{#</div>#}
 
 
 

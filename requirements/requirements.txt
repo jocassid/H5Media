@@ -3,3 +3,4 @@
 Django==4.2.11
 requests==2.31.0
 djangorestframework==3.15.2
+fontawesomefree==6.6.0
