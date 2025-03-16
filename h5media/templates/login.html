@@ -22,18 +22,19 @@
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}">
+      
+        <label for="id_username">Username</label>
+        <input id="id_username" type="text" name="username"/>
+        
+        <label for="id_password">Password</label>
+        <input id="id_password" type="password" name="password"/>
+        
 
-        <div style="grid-area: 1 / 2 / 2 / 3">{{ form.username.label_tag }}</div>
-        <div style="grid-area: 1 / 3 / 2 / 4">{{ form.username }}</div>
-
-        <div style="grid-area: 2 / 2 / 3 / 3">{{ form.password.label_tag }}</div>
-        <div style="grid-area: 2 / 3 / 3 / 4">{{ form.password }}</div>
-
-        <div style="grid-area: 3 / 3 / 4 / 4">
+        <div>
             <input type="submit" value="Login" class="button is-primary"/>
         </div>
 
-        <div style="grid-area: 4 / 3 / 5 / 4">
+        <div>
             {# Assumes you set up the password_reset view in your URLconf #}
             <a href="{% url 'password_reset' %}">Lost password?</a>
         </div>
