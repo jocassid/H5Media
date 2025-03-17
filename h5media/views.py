@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from http import HTTPStatus
 from logging import getLogger
 from typing import Optional, List, Set, Union
@@ -132,6 +133,7 @@ class HomeView(PageView):
             queue = []
 
         context['queue'] = queue
+        context['current_time'] = datetime.now()
         return context
 
 
@@ -337,7 +339,6 @@ class PodcastToggleSubscription(BasePostView):
 
 
 class DevelopmentView(BasePostView):
-
     template_name = 'partial/development.html'
 
     def get_context_data(self, **kwargs):
@@ -361,6 +362,8 @@ class DevelopmentView(BasePostView):
         return context
 
 
+class MenuView(BaseView):
+    template_name = 'menu.html'
 
 
 

@@ -25,6 +25,7 @@ from django.urls import path
 from h5media.views import (
     DevelopmentView,
     HomeView,
+    MenuView,
     PodcastEpisodeAddToQueueView,
     PodcastEpisodeListView,
     PodcastSearchView,
@@ -49,6 +50,11 @@ urlpatterns = [
         'password-reset/',
         PasswordResetView.as_view(template_name="password_reset.html"),
         name='password_reset',
+    ),
+    path(
+        'menu/',
+        MenuView.as_view(),
+        name='menu',
     ),
     path(
         'podcasts/',

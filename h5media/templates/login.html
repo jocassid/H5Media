@@ -29,15 +29,13 @@
         <label for="id_password">Password</label>
         <input id="id_password" type="password" name="password"/>
         
-
         <div>
-            <input type="submit" value="Login" class="button is-primary"/>
+          <input type="submit" value="Login" class="button is-primary"/>  
         </div>
-
-        <div>
-            {# Assumes you set up the password_reset view in your URLconf #}
+        
+      
+        {# Assumes you set up the password_reset view in your URLconf #}
             <a href="{% url 'password_reset' %}">Lost password?</a>
-        </div>
 
     </form>
 </div>
