@@ -29,11 +29,21 @@
         <div style="grid-area: 2 / 2 / 3 / 3">{{ form.password.label_tag }}</div>
         <div style="grid-area: 2 / 3 / 3 / 4">{{ form.password }}</div>
 
+        <div style="grid-area: 3 / 2 / 4 / 3"><label for="mode">Mode:</label></div>
         <div style="grid-area: 3 / 3 / 4 / 4">
-            <input type="submit" value="Login" class="button is-primary"/>
+            <div class="select">
+                <select name="mode" id="mode">
+                    <option value="desktop">Desktop</option>
+                    <option value="mobile">Mobile</option>
+                </select>
+            </div>
         </div>
 
         <div style="grid-area: 4 / 3 / 5 / 4">
+            <input type="submit" value="Login" class="button is-primary"/>
+        </div>
+
+        <div style="grid-area: 5 / 3 / 6 / 4">
             {# Assumes you set up the password_reset view in your URLconf #}
             <a href="{% url 'password_reset' %}">Lost password?</a>
         </div>

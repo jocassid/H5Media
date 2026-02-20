@@ -1,29 +1,4 @@
-{% extends 'css_only.html' %}
-{% load static %}
-{% comment %}
-
-A template that adds JavaScript libraries and navbar
-
-{% endcomment %}
-
-{#{% block htmx_config %}#}
-{#{#}
-{#    "defaultSwapStyle": "outerHTML"#}
-{# } #}
-{#{% endblock %}#}
-
-{% block javascript %}
-    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
-    <script src="{% static 'htmx.min.js' %}"></script>
-    <script src="{% static 'h5media.js' %}"></script>
-    <script src="{% static 'response-targets.js' %}"></script>
-    <script>
-    
-        htmx.config.defaultSwapStyle = 'outerHTML';
-
-    
-    </script>
-{% endblock %}
+{% extends "css_and_javascript.html" %}
 
 
 {% block header %}
@@ -72,9 +47,9 @@ A template that adds JavaScript libraries and navbar
             </div>
         </div>
     </nav>
-    
+
     {# This is where error message are shown #}
     <div id="alerts">
-      
+
     </div>
 {% endblock header %}

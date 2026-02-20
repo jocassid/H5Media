@@ -10,6 +10,12 @@ function documentReady()
 {
     $(".navbar-burger").click(navbarBurgerClicked);
 
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        if (csrfToken) {
+            event.detail.headers['X-CSRFToken'] = csrfToken;
+        }
+    });
 }
 
 $(document).ready(documentReady);

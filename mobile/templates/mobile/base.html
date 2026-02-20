@@ -1,0 +1,52 @@
+{% extends 'css_and_javascript.html' %}
+{% load static %}
+
+{% comment %}
+Base template for the mobile app.
+
+It extends the main css_and_javascript.html
+{% endcomment %}
+
+
+{% block header %}
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'mobile:home' %}">
+                <strong>H5Media Mobile</strong>
+            </a>
+            <a role="button"
+               class="navbar-burger"
+               aria-label="menu"
+               aria-expanded="false"
+               data-target="mobileNavbar">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="mobileNavbar" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'mobile:home' %}">Home</a>
+                <a class="navbar-item" href="{% url 'podcasts' %}">Podcasts</a>
+                {% if user.is_staff %}
+                    <a class="navbar-item" href="/admin/">Admin</a>
+                {% endif %}
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button class="button is-light">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="alerts">
+    </div>
+    {% csrf_token %}
+{% endblock header %}

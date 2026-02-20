@@ -1,8 +1,7 @@
 {% load static %}
 {% comment %}
 
-A template that can be used for login page.  Has CSS, but doesn't load any
-JavaScript.  Defines header, main, and footer blocks
+A template that adds JavaScript libraries
 
 {% endcomment %}
 <!DOCTYPE html>
@@ -12,8 +11,18 @@ JavaScript.  Defines header, main, and footer blocks
 {#    <meta name="htmx-config" content='{% block htmx_config %}{% endblock %}'>#}
     <title>H5Media - {{ page_title_suffix }}</title>
     {% include 'partial/css.html' %}
+
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'htmx.min.js' %}"></script>
+    <script src="{% static 'h5media.js' %}"></script>
+    <script src="{% static 'response-targets.js' %}"></script>
+    <script>
+        htmx.config.defaultSwapStyle = 'outerHTML';
+    </script>
+    {% block extra_javascript %}
+    {% endblock %}
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <header>
         {% block header %}
         {% endblock %}
@@ -28,3 +37,9 @@ JavaScript.  Defines header, main, and footer blocks
     </footer>
 </body>
 </html>
+
+
+
+
+
+
