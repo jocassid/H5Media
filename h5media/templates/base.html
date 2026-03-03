@@ -35,6 +35,10 @@ A template that adds JavaScript libraries and navbar
       <button>
         <i class="fa-solid fa-bars"></i>
       </button>
+      <button hx-get="/"
+              hx-target="html"
+              hx-trigger="click"
+              hx-swap="outerHTML">HOME</button>
     </div>
     
     {# This is where error message are shown #}
