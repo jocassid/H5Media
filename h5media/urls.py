@@ -25,6 +25,7 @@ from h5media.views import (
     DevelopmentView,
     HomeView,
     LoginView,
+    MenuView,
     PodcastEpisodeAddToQueueView,
     PodcastEpisodeListView,
     PodcastSearchView,

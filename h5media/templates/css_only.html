@@ -13,7 +13,7 @@ JavaScript.  Defines header, main, and footer blocks
     <title>H5Media - {{ page_title_suffix }}</title>
     {% include 'partial/css.html' %}
 </head>
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body>
     <header>
         {% block header %}
         {% endblock %}
