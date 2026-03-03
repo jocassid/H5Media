@@ -1,22 +1,21 @@
 
-function buttonLink(event){
-	let target = $(event.target);
-	let tagName = target[0].tagName;
-	while( tagName !== 'BUTTON' ){
-		target = target.parent();
-		tagName = target[0].tagName;
-		if( tagName === 'BODY' ){
-			return;
-		}
-	}
-	document.location = target.attr('data-href');
+function navbarBurgerClicked()
+{
+    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+      $(".navbar-burger").toggleClass("is-active");
+      $(".navbar-menu").toggleClass("is-active");
 }
-
-
 
 function documentReady()
 {
-    $('.button-link').click(buttonLink);
+    $(".navbar-burger").click(navbarBurgerClicked);
+
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        if (csrfToken) {
+            event.detail.headers['X-CSRFToken'] = csrfToken;
+        }
+    });
 }
 
 $(document).ready(documentReady);

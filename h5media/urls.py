@@ -16,16 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth.views import (
-    LoginView,
     LogoutView,
     PasswordResetView,
 )
-from django.urls import path
+from django.urls import include, path
 
 from h5media.views import (
     DevelopmentView,
     HomeView,
-    MenuView,
+    LoginView,
     PodcastEpisodeAddToQueueView,
     PodcastEpisodeListView,
     PodcastSearchView,
@@ -38,7 +37,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(
         'login/',
-        LoginView.as_view(template_name='login.html'),
+        LoginView.as_view(),
         name='login',
     ),
     path(
@@ -94,6 +93,7 @@ urlpatterns = [
         DevelopmentView.as_view(),
         name='development'
     ),
+    path('mobile/', include('mobile.urls')),
     path(
         '',
         HomeView.as_view(),

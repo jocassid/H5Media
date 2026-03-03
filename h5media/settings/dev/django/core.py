@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'h5media',
     'fontawesomefree',
+    'mobile',
 ]
 
 MIDDLEWARE = [

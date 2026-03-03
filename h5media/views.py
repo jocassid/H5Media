@@ -17,6 +17,9 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 
+from django.contrib.auth.views import LoginView as DjangoLoginView
+from django.urls import reverse, reverse_lazy
+
 from h5media.actions.podcast_actions import AddEpisodeToQueueAction
 from h5media.models import (
     MediaFile,
@@ -336,6 +339,16 @@ class PodcastToggleSubscription(BasePostView):
         setattr(podcast, 'subscribed', subscribed)
         context['podcast'] = podcast
         return context
+
+
+class LoginView(DjangoLoginView):
+    template_name = 'login.html'
+
+    def get_success_url(self):
+        mode = self.request.POST.get('mode')
+        if mode == 'mobile':
+            return reverse('mobile:home')
+        return super().get_success_url()
 
 
 class DevelopmentView(BasePostView):
