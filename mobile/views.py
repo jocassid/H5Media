@@ -1,4 +1,4 @@
-
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
@@ -27,14 +27,14 @@ class HomeView(PageView):
 
 class MenuView(TemplateView):
 
-    template_name = 'mobile/menu.html'
+    def get_template_names(self):
+        action = self.request.GET.get('action', 'open')
+        if action == 'open':
+            return ['mobile/menu_open.html']
+        return ['mobile/menu_closed.html']
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         return context
-
-
-class CloseMenuView(TemplateView):
-
-    template_name = 'mobile/close_menu.html'
