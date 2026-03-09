@@ -18,10 +18,11 @@ It extends the main css_and_javascript.html
       </div>
       <div class="navbar-center"></div>
       <div class="navbar-right">
-        <button>Menu</button>
+        <button hx-get="{% url 'mobile:menu' %}" hx-target="#menu-dialog">Menu</button>
       </div>
     </nav>
     
+    <div id="menu-container"></div>
     <div id="alerts">
     </div>
 
