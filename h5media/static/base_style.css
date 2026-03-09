@@ -7,6 +7,12 @@
             & > nav{
                 display: grid;
                 grid-template-columns: fit-content(5%) auto fit-content(5%);
+                & div.navbar-center{
+                    grid-column: 2;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
             }
 
         }
