@@ -26,7 +26,7 @@ class AlbumTrackAdmin(ModelAdmin):
     list_display = (
         'pk',
         'album',
-        'title',
+        'mediafile_ptr',
     )
 
 
@@ -52,6 +52,7 @@ class AudiobookChapterAdmin(ModelAdmin):
 class PlayListAdmin(ModelAdmin):
     list_display = (
         'pk',
+        'title',
         'owner',
     )
 

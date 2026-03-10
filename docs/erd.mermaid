@@ -1,0 +1,52 @@
+erDiagram
+    User ||--|| Profile : "has"
+    User ||--o{ PlayList : "owns"
+    PlayList ||--o{ PlayListItem : "contains"
+    
+    Podcast ||--o{ PodcastEpisode : "contains"
+    Audiobook ||--o{ AudiobookChapter : "contains"
+    Album ||--o{ AlbumTrack : "contains"
+
+    Profile {
+        JSONField now_playing
+        JSONField queue
+    }
+
+    PlayList {
+        string placeholder
+    }
+
+    PlayListItem {
+        IntegerField item_number
+    }
+
+    Podcast {
+        CharField title
+        URLField website
+        URLField rss
+        TextField description
+    }
+
+    MediaFile {
+        CharField title
+        CharField file_path
+        CharField type
+    }
+
+    PodcastEpisode {
+        URLField url
+        DateTimeField pub_date
+        TextField description
+    }
+
+    AudiobookChapter {
+        IntegerField chapter
+    }
+
+    AlbumTrack {
+        string placeholder
+    }
+
+    MediaFile ||--o{ PodcastEpisode : "is a"
+    MediaFile ||--o{ AudiobookChapter : "is a"
+    MediaFile ||--o{ AlbumTrack : "is a"

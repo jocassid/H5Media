@@ -1,41 +1,40 @@
 {% extends "mobile/base.html" %}
 {% load static %}
 
-{% block content %}
-<div class="container is-fluid">
-    <h1 class="title mt-4">Mobile Play Queue</h1>
-    
-    <div class="table-container">
-        <table class="table is-fullwidth is-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Type</th>
-                    <th>Title</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in queue %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>
-                            {% if item.type == MediaFile.TYPE_PODCAST_EPISODE %}
-                                <i class="fa-solid fa-podcast"></i>
-                            {% elif item.type == MediaFile.TYPE_AUDIOBOOK_CHAPTER %}
-                                <i class="fa-solid fa-book"></i>
-                            {% elif item.type == MediaFile.TYPE_ALBUM_TRACK %}
-                                <i class="fa-solid fa-music"></i>
-                            {% endif %}
-                        </td>
-                        <td>{{ item.title }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="3" class="has-text-centered">Your queue is empty.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+{% block main %}
+  <div>
+
+
+    <table class="table is-fullwidth is-striped">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Type</th>
+        <th>Title</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for item in queue %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            {% if item.type == MediaFile.TYPE_PODCAST_EPISODE %}
+              <i class="fa-solid fa-podcast"></i>
+            {% elif item.type == MediaFile.TYPE_AUDIOBOOK_CHAPTER %}
+              <i class="fa-solid fa-book"></i>
+            {% elif item.type == MediaFile.TYPE_ALBUM_TRACK %}
+              <i class="fa-solid fa-music"></i>
+            {% endif %}
+          </td>
+          <td>{{ item.title }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3" class="has-text-centered">Your queue is empty.</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
 {% endblock %}

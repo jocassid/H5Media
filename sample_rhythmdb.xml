@@ -1,0 +1,60 @@
+<?xml version="1.0" standalone="yes"?>
+<rhythmdb version="2.0">
+  <entry type="song">
+    <title>Test Track 1</title>
+    <genre>Alternative</genre>
+    <artist>Artist A</artist>
+    <album>Album One</album>
+    <track-number>1</track-number>
+    <duration>180</duration>
+    <file-size>5000000</file-size>
+    <location>file:///home/user/Music/ArtistA/AlbumOne/Track01.mp3</location>
+    <mtime>1600000000</mtime>
+    <first-seen>1600000000</first-seen>
+    <last-seen>1600000000</last-seen>
+    <rating>0</rating>
+    <play-count>5</play-count>
+    <last-played>1600000000</last-played>
+    <bitrate>320</bitrate>
+    <date>734138</date>
+    <mimetype>audio/mpeg</mimetype>
+  </entry>
+  <entry type="song">
+    <title>Test Track 2</title>
+    <genre>Alternative</genre>
+    <artist>Artist A</artist>
+    <album>Album One</album>
+    <track-number>2</track-number>
+    <duration>200</duration>
+    <file-size>6000000</file-size>
+    <location>file:///home/user/Music/ArtistA/AlbumOne/Track02.mp3</location>
+    <mtime>1600000000</mtime>
+    <first-seen>1600000000</first-seen>
+    <last-seen>1600000000</last-seen>
+    <rating>0</rating>
+    <play-count>3</play-count>
+    <last-played>1600000000</last-played>
+    <bitrate>320</bitrate>
+    <date>734138</date>
+    <mimetype>audio/mpeg</mimetype>
+  </entry>
+  <entry type="song">
+    <title>Single Track</title>
+    <genre>Pop</genre>
+    <artist>Artist B</artist>
+    <album>Single</album>
+    <track-number>1</track-number>
+    <duration>210</duration>
+    <file-size>7000000</file-size>
+    <location>file:///home/user/Music/ArtistB/Single/Track01.mp3</location>
+    <mtime>1600000000</mtime>
+    <first-seen>1600000000</first-seen>
+    <last-seen>1600000000</last-seen>
+    <rating>0</rating>
+    <play-count>1</play-count>
+    <last-played>1600000000</last-played>
+    <bitrate>320</bitrate>
+    <date>734138</date>
+    <mimetype>audio/mpeg</mimetype>
+  </entry>
+</rhythmdb>

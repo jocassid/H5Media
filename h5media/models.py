@@ -18,29 +18,27 @@ from django.db.models import (
     ManyToManyField,
     Max,
     OneToOneField,
+    PositiveIntegerField,
     TextField,
     URLField,
 )
 from django.db.transaction import atomic
 
 
-class DatabaseError(RuntimeError):
-    pass
-
-
-class TitledObjectMixin(Model):
-    title = CharField(
+def build_title_field() -> CharField:
+    return CharField(
         max_length=250,
         null=False,
         blank=False,
         default='',
     )
 
-    class Meta:
-        abstract = True
 
-    def __str__(self):
-        return self.title
+class DatabaseError(RuntimeError):
+    pass
+
+
+
 
 
 class BaseModel(Model):
@@ -84,24 +82,15 @@ class Profile(BaseModel):
         related_name='profile',
     )
 
-    now_playing = JSONField(
-        null=False,
-        blank=False,
-        default=dict
-    )
-
-    queue = JSONField(
-        null=False,
-        blank=False,
-        default=profile_queue_default
-    )
-
     def __str__(self):
         return self.user.username
 
 
-class MediaFile(TitledObjectMixin, BaseModel):
+class MediaFile(BaseModel):
     """Audio or visual file"""
+
+    title = build_title_field()
+
     file_path = CharField(
         max_length=250,
         null=False,
@@ -125,22 +114,45 @@ class MediaFile(TitledObjectMixin, BaseModel):
         choices=TYPE_CHOICES,
     )
 
+    def __str__(self):
+        return self.title
+
 
 def playlist_contents_default():
     return []
 
 
-class PlayList(TitledObjectMixin, BaseModel):
+class PlayList(BaseModel):
+
+    title = build_title_field()
+
     owner = ForeignKey(
         User,
         on_delete=CASCADE,
         related_name='playlists',
     )
 
-    contents = JSONField(
-        null=False,
-        blank=False,
-        default=playlist_contents_default
+
+class PlayListItem(BaseModel):
+
+    class Meta:
+        unique_together = ('playlist', 'item_number')
+
+    playlist = ForeignKey(
+        PlayList,
+        on_delete=CASCADE,
+        related_name='items',
+    )
+
+    item_number = PositiveIntegerField(
+        null=True,
+        default=1
+    )
+
+    media_file = ForeignKey(
+        MediaFile,
+        on_delete=CASCADE,
+        related_name='play_list_items',
     )
 
 
@@ -201,8 +213,9 @@ class PodcastEpisode(MediaFile):
             return episode
 
 
-class Audiobook(TitledObjectMixin, BaseModel):
-    pass
+class Audiobook(BaseModel):
+
+    title = build_title_field()
 
 
 class AudiobookChapter(MediaFile):
@@ -225,8 +238,12 @@ class AudiobookChapter(MediaFile):
         ]]
 
 
-class Album(TitledObjectMixin, BaseModel):
-    pass
+class Album(BaseModel):
+
+    title = build_title_field()
+
+    def __str__(self):
+        return self.title
 
 
 class AlbumTrack(MediaFile):

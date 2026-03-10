@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="yes"?>
+<playlists version="1.0">
+  <playlist name="Favorites" type="static">
+    <location>file:///home/user/Music/ArtistA/AlbumOne/Track01.mp3</location>
+    <location>file:///home/user/Music/ArtistB/Single/Track01.mp3</location>
+  </playlist>
+  <playlist name="Recent" type="static">
+    <location>file:///home/user/Music/ArtistA/AlbumOne/Track02.mp3</location>
+  </playlist>
+</playlists>

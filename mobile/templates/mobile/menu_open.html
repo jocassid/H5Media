@@ -1,4 +1,6 @@
 <dialog id="menu-dialog" open>
-  <button hx-get="{% url 'mobile:menu' %}?action=close" hx-target="#menu-dialog" hx-swap="outerHTML">Close</button>
+  <button hx-get="{% url 'mobile:menu' %}?action=close"
+          hx-target="#menu-dialog"
+          hx-swap="outerHTML">Close</button>
   <h1>This is the menu</h1>
 </dialog>
