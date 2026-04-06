@@ -6,6 +6,7 @@ from h5media.models import (
     AlbumTrack,
     Audiobook,
     AudiobookChapter,
+    MediaFile,
     PlayList,
     Podcast,
     PodcastEpisode,
@@ -19,6 +20,7 @@ class AlbumAdmin(ModelAdmin):
         'pk',
         'title',
     )
+    search_fields = ('title',)
 
 
 @register(AlbumTrack)
@@ -26,7 +28,9 @@ class AlbumTrackAdmin(ModelAdmin):
     list_display = (
         'pk',
         'album',
-        'mediafile_ptr',
+        'title',
+        'disc',
+        'track',
     )
 
 
@@ -45,6 +49,15 @@ class AudiobookChapterAdmin(ModelAdmin):
         'audiobook',
         'chapter',
         'title',
+    )
+
+
+@register(MediaFile)
+class MediaFileAdmin(ModelAdmin):
+    list_display = (
+        'pk',
+        'title',
+        'type',
     )
 
 

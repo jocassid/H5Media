@@ -15,11 +15,13 @@ from django.db.models import (
     ForeignKey,
     IntegerField,
     JSONField,
+    Manager,
     ManyToManyField,
     Max,
     OneToOneField,
     PositiveIntegerField,
     TextField,
+    UniqueConstraint,
     URLField,
 )
 from django.db.transaction import atomic
@@ -82,6 +84,8 @@ class Profile(BaseModel):
         related_name='profile',
     )
 
+    queue = ManyToManyField('MediaFile', through='ProfileQueue')
+
     def __str__(self):
         return self.user.username
 
@@ -116,6 +120,27 @@ class MediaFile(BaseModel):
 
     def __str__(self):
         return self.title
+
+
+class ProfileQueue(BaseModel):
+
+    profile = ForeignKey(
+        Profile,
+        on_delete=CASCADE,
+    )
+
+    media_file = ForeignKey(
+        MediaFile,
+        on_delete=CASCADE,
+    )
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=['profile', 'media_file'],
+                name='unique_profile_media_file',
+            )
+        ]
 
 
 def playlist_contents_default():
@@ -246,6 +271,11 @@ class Album(BaseModel):
         return self.title
 
 
+class AlbumTrackManager(Manager):
+
+    def create(self, **kwargs):
+        ...
+
 class AlbumTrack(MediaFile):
 
     album = ForeignKey(
@@ -255,6 +285,10 @@ class AlbumTrack(MediaFile):
         related_name='tracks',
         on_delete=CASCADE,
     )
+
+    disc = IntegerField(default=1)
+
+    track = IntegerField(default=1)
 
 
 
