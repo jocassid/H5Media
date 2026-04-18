@@ -1,6 +1,6 @@
 # requirements common to dev and production
 # Only top-level imports shown
-Django==4.2.11
-requests==2.31.0
-djangorestframework==3.15.2
+Django==6.0.4
+requests==2.33.1
+djangorestframework==3.17.1
 fontawesomefree==6.6.0

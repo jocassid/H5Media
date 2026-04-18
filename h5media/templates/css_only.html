@@ -9,9 +9,10 @@ JavaScript.  Defines header, main, and footer blocks
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-{#    <meta name="htmx-config" content='{% block htmx_config %}{% endblock %}'>#}
     <title>H5Media - {{ page_title_suffix }}</title>
-    {% include 'partial/css.html' %}
+    <link rel="stylesheet" href="{% static 'bulma/css/bulma.css' %}">
+    <link rel="stylesheet" href="{% static 'common.css' %}">
+    <link rel="stylesheet" href="{% static 'h5media/h5media.css' %}">
 </head>
 <body>
     <header>

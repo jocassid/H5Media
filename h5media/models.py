@@ -274,9 +274,13 @@ class Album(BaseModel):
 class AlbumTrackManager(Manager):
 
     def create(self, **kwargs):
-        ...
+        kwargs['type'] = AlbumTrack.TYPE_ALBUM_TRACK
+        super().create(**kwargs)
+
 
 class AlbumTrack(MediaFile):
+
+    objects = AlbumTrackManager()
 
     album = ForeignKey(
         Album,
@@ -289,6 +293,16 @@ class AlbumTrack(MediaFile):
     disc = IntegerField(default=1)
 
     track = IntegerField(default=1)
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None,
+    ):
+        self.type = AlbumTrack.TYPE_ALBUM_TRACK
+        super().save()
 
 
 

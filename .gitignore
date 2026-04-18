@@ -7,3 +7,4 @@ rss_cache/
 unpack/
 .env
 **/migrations/
+scrapped/

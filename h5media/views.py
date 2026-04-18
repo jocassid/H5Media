@@ -21,6 +21,7 @@ from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.urls import reverse, reverse_lazy
 
 from h5media.actions.podcast_actions import AddEpisodeToQueueAction
+from h5media.forms import BulmaAuthenticationForm
 from h5media.models import (
     MediaFile,
     Podcast,
@@ -343,6 +344,7 @@ class PodcastToggleSubscription(BasePostView):
 
 class LoginView(DjangoLoginView):
     template_name = 'login.html'
+    authentication_form = BulmaAuthenticationForm
 
     def get_success_url(self):
         mode = self.request.POST.get('mode')
