@@ -2,6 +2,7 @@
 
     body{
         & > header{
+            max-height: 10vh;
             & > nav{
 
             }
@@ -15,8 +16,62 @@
                 padding-top: 2rem;
             }
 
-        }
+            & > div.home{
+                display: grid;
+                grid-template-columns: 60% 40%;
 
+                & div.card{
+                    height: 100%;
+                    & > header.card-header{
+                        height: 15%;
+                    }
+                }
+
+                & > div.home-now-playing,
+                & > div.home-queue,
+                & > div.home-search{
+                    & > div.card{
+
+                    }
+                }
+
+                & > div.home-now-playing, & > div.home-queue{
+                    min-height: 35vh;
+                    max-height: 60vh;
+                    padding-top: 2rem;
+                    padding-bottom: 1rem;
+                    & > div.card{
+                        & > div.card-content{ height: 70%; }
+                        & > footer.card-footer{ height: 15%; }
+                    }
+                }
+
+                & > div.home-now-playing{
+                    padding-left: 2rem;
+                    padding-right: 1rem;
+                    & > div.card{
+                         & > footer.card-footer{
+                             display: grid;
+                             grid-template-columns: repeat(5, 1fr) 2fr 1fr 1fr;
+                         }
+                     }
+                }
+
+                & > div.home-queue{
+                    padding-left: 1rem;
+                    padding-right: 2rem;
+                }
+
+                & > div.home-search{
+                    grid-column: 1 / 3;
+                    padding: 1rem 2rem 2rem 2rem;
+                    & > div.card{
+                        & > div.card-content{ height: 85%; }
+                    }
+                }
+
+            }
+        }
     }
 
 }

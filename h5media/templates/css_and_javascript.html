@@ -8,15 +8,10 @@ A template that adds JavaScript libraries
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-{#    <meta name="htmx-config" content='{% block htmx_config %}{% endblock %}'>#}
     <title>H5Media - {{ page_title_suffix }}</title>
     {% include 'partial/css.html' %}
-    {% block extra_css %}
-    {% endblock %}
-
     <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'htmx.min.js' %}"></script>
-    <script src="{% static 'h5media.js' %}"></script>
     <script src="{% static 'response-targets.js' %}"></script>
     <script>
         htmx.config.defaultSwapStyle = 'outerHTML';

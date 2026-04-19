@@ -7,47 +7,116 @@ CONTEXT VARIABLES
 
 {% endcomment %}
 
-{% block content %}
-    
+{% block main %}
 
+<div class="home">
 
-<div class="placeholder">
+  <div class="home-now-playing">
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">Now Playing:</p>
+      </header>
+      <div class="card-content">
+        <audio controls></audio>
+      </div>
+      <footer class="card-footer">
+        <button class="card-footer-item">
+          <span class="icon">
+            <i class="fa-solid fa-backward-fast"></i>
+          </span>
+        </button>
+        <button class="card-footer-item">
+          <span class="icon">
+            <i class="fa-solid fa-backward"></i>
+          </span>
+        </button>
+        <button class="card-footer-item">
+          <span class="icon">
+            <i class="fa-solid fa-play"></i>
+          </span>
+        </button>
+        <button class="card-footer-item">
+          <span class="icon">
+            <i class="fa-solid fa-forward"></i>
+          </span>
+        </button>
+        <button class="card-footer-item">
+          <span class="icon">
+            <i class="fa-solid fa-forward-fast"></i>
+          </span>
+        </button>
+        <div class="card-footer-item">
+          <progress value="20" max="100"></progress> 0:20 / 1:40
+        </div>
+        <button class="card-footer-item">
+          <span class="icon">
+            <i class="fa-solid fa-volume"></i>
+          </span>
+        </button>
+        <button class="card-footer-item">
+          <span class="icon">
+            <i class="fa-solid fa-expand"></i>
+          </span>
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="home-queue">
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">Queue / Playlist:</p>
+      </header>
+      <div class="card-content"></div>
+      <footer class="card-footer"></footer>
+    </div>
+  </div>
+
+  <div class="home-search">
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">Search:</p>
+      </header>
+      <div class="card-content">
+
+      </div>
+    </div>
+
+  </div>
+
+<!--
+
+    <div id="queueControls">
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label"
+                 for="queueOrPlaylist"
+                 style="min-width: 8rem">Queue / Playlist:</label>
+        </div>
+        <div class="field-body">
+          <div class="field is-narrow">
+            <div class="control">
+              <div class="select is-rounded">
+                <select id="queueOrPlaylist" class="select is-fullwidth">
+                  <option>Queue</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div id="queueTable">
+    <div>header</div>
+    <div>Rows</div>
+  </div>
+
+-->
+
 
 </div>
-
-{#<video#}
-{#    controls#}
-{#    width="100%"#}
-{#    src="{% static 'sample_video1.webm' %}"></video>#}
-
-<div class="placeholder">
-  <h1>Play Queue</h1>
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in queue %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>
-            {% if item.type == MediaFile.TYPE_PODCAST_EPISODE %}
-              <i class="fa-solid fa-podcast"></i>
-            {% elif item.type == MediaFile.TYPE_AUDIOBOOK_CHAPTER %}
-              <i class="fa-solid fa-book"></i>
-            {% elif item.type == MediaFile.TYPE_ALBUM_TRACK %}
-              <i class="fa-solid fa-music"></i>
-            {% endif %}
-          </td>
-          <td>{{ item.title }}</td>
-        </tr>
-      {% empty %}
-      {% endfor %}
-    </tbody>
-  </table>
 
 {% endblock %}
 
-</div>
+
