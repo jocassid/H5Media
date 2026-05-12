@@ -1,0 +1,33 @@
+digraph H5MediaTemplates {
+		node [shape=none margin=0];
+
+    label="H5Media Templates";
+
+    subgraph cluster_h5media{
+        label="H5Media";
+
+        "mobile/css_and_javascript.html" [label=<<table cellborder="1" cellspacing="0">
+          <tr><td bgcolor="lightblue"><b>css_and_javascript.html</b></td></tr>
+          <tr><td></td></tr>
+        </table>>];
+    }
+
+    subgraph cluster_mobile{
+        label="mobile";
+
+        "mobile/base.html" [label=<<table cellborder="1" cellspacing="0">
+          <tr><td bgcolor="lightblue"><b>base.html</b></td></tr>
+          <tr><td></td></tr>
+        </table>>];
+
+        "mobile/home.html" [label=<<table cellborder="1" cellspacing="0">
+          <tr><td bgcolor="lightblue"><b>home.html</b></td></tr>
+          <tr><td>Renders currently playing file and the queue</td></tr>
+        </table>>];
+
+        "mobile/base.html" -> "mobile/home.html";
+    }
+
+    "mobile/css_and_javascript.html" -> "mobile/base.html";
+
+}

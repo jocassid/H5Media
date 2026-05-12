@@ -84,8 +84,6 @@ class Profile(BaseModel):
         related_name='profile',
     )
 
-    queue = ManyToManyField('MediaFile', through='ProfileQueue')
-
     def __str__(self):
         return self.user.username
 
@@ -122,11 +120,17 @@ class MediaFile(BaseModel):
         return self.title
 
 
-class ProfileQueue(BaseModel):
+class QueueItem(BaseModel):
 
     profile = ForeignKey(
         Profile,
         on_delete=CASCADE,
+    )
+
+    order = IntegerField(
+        null=False,
+        blank=False,
+        default=0,
     )
 
     media_file = ForeignKey(
@@ -137,7 +141,7 @@ class ProfileQueue(BaseModel):
     class Meta:
         constraints = [
             UniqueConstraint(
-                fields=['profile', 'media_file'],
+                fields=['profile', 'order'],
                 name='unique_profile_media_file',
             )
         ]

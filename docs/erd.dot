@@ -1,0 +1,95 @@
+digraph erd {
+    graph [label="H5Media ER Diagram" labelloc=t pad=0.5 nodesep=0.5 ranksep=0.5]
+    node [shape=none margin=0]
+    edge [dir=both arrowsize=0.8]
+
+    User [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>User</b></td></tr>
+    </table>>]
+
+    Profile [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue" port="profile"><b>Profile</b></td></tr>
+        <tr><td port="user">user_id (FK)</td></tr>
+    </table>>]
+
+    MediaFile [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>MediaFile</b></td></tr>
+        <tr><td>title</td></tr>
+        <tr><td>file_path</td></tr>
+        <tr><td>type</td></tr>
+    </table>>]
+
+    ProfileQueue [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>ProfileQueue</b></td></tr>
+        <tr><td port="profile">profile_id (FK)</td></tr>
+        <tr><td port="media_file">media_file_id (FK)</td></tr>
+    </table>>]
+
+    PlayList [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue" port="playlist"><b>PlayList</b></td></tr>
+        <tr><td>title</td></tr>
+        <tr><td port="owner">owner_id (FK)</td></tr>
+    </table>>]
+
+    PlayListItem [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>PlayListItem</b></td></tr>
+        <tr><td port="playlist">playlist_id (FK)</td></tr>
+        <tr><td port="media_file">media_file_id (FK)</td></tr>
+        <tr><td>item_number</td></tr>
+    </table>>]
+
+    Podcast [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>Podcast</b></td></tr>
+        <tr><td>title</td></tr>
+        <tr><td>website</td></tr>
+        <tr><td>rss</td></tr>
+        <tr><td>description</td></tr>
+    </table>>]
+
+    PodcastEpisode [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>PodcastEpisode</b></td></tr>
+        <tr><td port="podcast">podcast_id (FK)</td></tr>
+        <tr><td>url</td></tr>
+        <tr><td>pub_date</td></tr>
+        <tr><td>description</td></tr>
+    </table>>]
+
+    Audiobook [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>Audiobook</b></td></tr>
+        <tr><td>title</td></tr>
+    </table>>]
+
+    AudiobookChapter [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>AudiobookChapter</b></td></tr>
+        <tr><td port="audiobook">audiobook_id (FK)</td></tr>
+        <tr><td>chapter</td></tr>
+    </table>>]
+
+    Album [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>Album</b></td></tr>
+        <tr><td>title</td></tr>
+    </table>>]
+
+    AlbumTrack [label=<<table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightblue"><b>AlbumTrack</b></td></tr>
+        <tr><td port="album">album_id (FK)</td></tr>
+        <tr><td>disc</td></tr>
+        <tr><td>track</td></tr>
+    </table>>]
+
+    # Relationships
+    User -> Profile:user [arrowhead=none arrowtail=none label="1:1"]
+    Profile:profile -> ProfileQueue:profile [arrowhead=crow arrowtail=none label="1:N"]
+    MediaFile -> ProfileQueue:media_file [arrowhead=crow arrowtail=none label="1:N"]
+    User -> PlayList:owner [arrowhead=crow arrowtail=none label="1:N"]
+    PlayList:playlist -> PlayListItem:playlist [arrowhead=crow arrowtail=none label="1:N"]
+    MediaFile -> PlayListItem:media_file [arrowhead=crow arrowtail=none label="1:N"]
+    Podcast -> PodcastEpisode:podcast [arrowhead=crow arrowtail=none label="1:N"]
+    Audiobook -> AudiobookChapter:audiobook [arrowhead=crow arrowtail=none label="1:N"]
+    Album -> AlbumTrack:album [arrowhead=crow arrowtail=none label="1:N"]
+
+    # Inheritance
+    MediaFile -> PodcastEpisode [arrowhead=empty arrowtail=none dir=forward fontcolor=gray color=gray label="is a"]
+    MediaFile -> AudiobookChapter [arrowhead=empty arrowtail=none dir=forward fontcolor=gray color=gray label="is a"]
+    MediaFile -> AlbumTrack [arrowhead=empty arrowtail=none dir=forward fontcolor=gray color=gray label="is a"]
+}

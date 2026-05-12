@@ -11,6 +11,7 @@ from h5media.models import (
     Podcast,
     PodcastEpisode,
     Profile,
+    QueueItem,
 )
 
 
@@ -96,4 +97,14 @@ class Profile(ModelAdmin):
     list_display = (
         'pk',
         'user',
+    )
+
+
+@register(QueueItem)
+class QueueItemAdmin(ModelAdmin):
+    list_display = (
+        'pk',
+        'profile',
+        'order',
+        'media_file',
     )
