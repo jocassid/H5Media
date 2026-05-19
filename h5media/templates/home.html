@@ -11,56 +11,54 @@ CONTEXT VARIABLES
 
 <div class="home">
 
-  <div class="home-now-playing">
-    <div class="card">
-      <header class="card-header">
-        <p class="card-header-title">Now Playing:</p>
-      </header>
-      <div class="card-content">
-        <audio controls></audio>
-      </div>
-      <footer class="card-footer">
-        <button class="card-footer-item">
-          <span class="icon">
-            <i class="fa-solid fa-backward-fast"></i>
-          </span>
-        </button>
-        <button class="card-footer-item">
-          <span class="icon">
-            <i class="fa-solid fa-backward"></i>
-          </span>
-        </button>
-        <button class="card-footer-item">
-          <span class="icon">
-            <i class="fa-solid fa-play"></i>
-          </span>
-        </button>
-        <button class="card-footer-item">
-          <span class="icon">
-            <i class="fa-solid fa-forward"></i>
-          </span>
-        </button>
-        <button class="card-footer-item">
-          <span class="icon">
-            <i class="fa-solid fa-forward-fast"></i>
-          </span>
-        </button>
-        <div class="card-footer-item">
-          <progress value="20" max="100"></progress> 0:20 / 1:40
-        </div>
-        <button class="card-footer-item">
-          <span class="icon">
-            <i class="fa-solid fa-volume"></i>
-          </span>
-        </button>
-        <button class="card-footer-item">
-          <span class="icon">
-            <i class="fa-solid fa-expand"></i>
-          </span>
-        </button>
-      </footer>
+  <article id="now-playing-panel" class="panel is-primary ">
+    <p class="panel-heading">Now Playing:</p>
+    <div class="panel-block">
+      <audio controls></audio>
     </div>
-  </div>
+    <div id="now-playing-controls" class="panel-block">
+      <button class="button is-primary">
+        <span class="icon">
+          <i class="fa-solid fa-backward-fast"></i>
+        </span>
+      </button>
+      <button class="button is-primary">
+        <span class="icon">
+          <i class="fa-solid fa-backward"></i>
+        </span>
+      </button>
+      <button class="button is-primary">
+        <span class="icon">
+          <i class="fa-solid fa-play"></i>
+        </span>
+      </button>
+      <button class="button is-primary">
+        <span class="icon">
+          <i class="fa-solid fa-forward"></i>
+        </span>
+      </button>
+      <button class="button is-primary">
+        <span class="icon">
+          <i class="fa-solid fa-forward-fast"></i>
+        </span>
+      </button>
+      <div id="now-playing-progress">
+        <progress class="progress" value="20" max="100"></progress> 0:20 / 1:40
+      </div>
+      <button class="button is-primary">
+        <span class="icon">
+          <i class="fa-solid fa-volume"></i>
+        </span>
+      </button>
+      <button class="button is-primary">
+        <span class="icon">
+          <i class="fa-solid fa-expand"></i>
+        </span>
+      </button>
+    </div>
+  </article>
+
+
 
   <div class="home-queue">
     <div class="card">

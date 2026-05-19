@@ -125,6 +125,7 @@ class QueueItem(BaseModel):
     profile = ForeignKey(
         Profile,
         on_delete=CASCADE,
+        related_name='queue',
     )
 
     order = IntegerField(

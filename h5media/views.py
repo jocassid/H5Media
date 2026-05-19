@@ -132,7 +132,7 @@ class HomeView(PageView):
 
         profile = self.get_profile(self.request)
         if profile:
-            queue = profile.queue or []
+            queue = profile.queue.order_by('order') or []
         else:
             queue = []
 
