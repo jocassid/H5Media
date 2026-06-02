@@ -132,7 +132,11 @@ class HomeView(PageView):
 
         profile = self.get_profile(self.request)
         if profile:
-            queue = profile.queue.order_by('order') or []
+            queue = profile.queue.select_related(
+                'media_file',
+                'media_file__albumtrack',
+                'media_file__albumtrack__album',
+            ).order_by('order') or []
         else:
             queue = []
 

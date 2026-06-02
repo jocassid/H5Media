@@ -14,7 +14,7 @@ CONTEXT VARIABLES
   <article id="now-playing-panel" class="panel is-primary ">
     <p class="panel-heading">Now Playing:</p>
     <div class="panel-block">
-      <audio controls></audio>
+      <audio></audio>
     </div>
     <div id="now-playing-controls" class="panel-block">
       <button class="button is-primary">
@@ -43,11 +43,12 @@ CONTEXT VARIABLES
         </span>
       </button>
       <div id="now-playing-progress">
-        <progress class="progress" value="20" max="100"></progress> 0:20 / 1:40
+        <progress class="progress" value="20" max="100"></progress>
+        <div><span>0:20</span>&nbsp;/&nbsp;<span>1:40</span></div>
       </div>
       <button class="button is-primary">
         <span class="icon">
-          <i class="fa-solid fa-volume"></i>
+          <i class="fa-solid fa-volume-high"></i>
         </span>
       </button>
       <button class="button is-primary">
@@ -58,17 +59,46 @@ CONTEXT VARIABLES
     </div>
   </article>
 
-
-
-  <div class="home-queue">
-    <div class="card">
-      <header class="card-header">
-        <p class="card-header-title">Queue / Playlist:</p>
-      </header>
-      <div class="card-content"></div>
-      <footer class="card-footer"></footer>
+  <article id="queue-panel" class="panel is-primary">
+    <div class="panel-heading">
+      <div class="dropdown is-active">
+        <div class="dropdown-trigger">
+          <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+            <span>Queue</span>
+            <span class="icon is-small">
+              <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a href="#" class="dropdown-item">Queue</a>
+            <hr class="dropdown-divider"/>
+            <a href="#" class="dropdown-item">New Playlist</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+    <div class="panel-block">
+      <div>
+        {% for queue_item in queue %}
+          <div>
+            {{ forloop.counter }}
+            {% with media_file=queue_item.media_file %}
+              {% if media_file.type == MediaFile.TYPE_ALBUM_TRACK %}
+                {% with album_track=media_file.albumtrack %}
+                  <i class="fa-solid fa-music"></i>
+                {% endwith %}
+              {% endif %}
+              {{ media_file.title }}
+            {% endwith %}
+          </div>
+        {% empty %}
+          <di>Queue is empty.</di>
+        {% endfor %}
+      </div>
+    </div>
+  </article>
 
   <div class="home-search">
     <div class="card">
