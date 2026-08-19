@@ -33,6 +33,10 @@ class AlbumTrackAdmin(ModelAdmin):
         'disc',
         'track',
     )
+    search_fields = (
+        'title',
+        'album__title',
+    )
 
 
 @register(Audiobook)

@@ -22,6 +22,7 @@ from django.contrib.auth.views import (
 from django.urls import include, path
 
 from h5media.views import (
+    AudioStreamView,
     DevelopmentView,
     HomeView,
     LoginView,
@@ -88,6 +89,11 @@ urlpatterns = [
         'podcasts/toggle_subscription/',
         PodcastToggleSubscription.as_view(),
         name='podcast_toggle_subscription',
+    ),
+    path(
+        'audio_stream/<int:pk>/',
+        AudioStreamView.as_view(),
+        name='audio_stream',
     ),
     path(
         'development/',

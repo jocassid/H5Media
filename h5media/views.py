@@ -2,7 +2,7 @@
 from datetime import datetime
 from http import HTTPStatus
 from logging import getLogger
-from typing import Optional, List, Set, Union
+from typing import Iterator, Optional, List, Set, Union
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 from django.core.serializers import serialize
 from django.db.models import BooleanField, Count, Q
 from django.db.models.functions import Cast
-from django.http import HttpRequest
+from django.http import HttpRequest, StreamingHttpResponse
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView
@@ -27,6 +27,7 @@ from h5media.models import (
     Podcast,
     PodcastEpisode,
     Profile,
+    QueueItem,
 )
 from h5media.serializers import PodcastEpisodeSerializer
 
@@ -130,18 +131,24 @@ class HomeView(PageView):
         context = super().get_context_data(**kwargs)
         context['MediaFile'] = MediaFile
 
+        first_queue_item: Optional[QueueItem] = None
         profile = self.get_profile(self.request)
         if profile:
-            queue = profile.queue.select_related(
-                'media_file',
-                'media_file__albumtrack',
-                'media_file__albumtrack__album',
-            ).order_by('order') or []
+            queue: list[QueueItem] = list(
+                profile.queue.select_related(
+                    'media_file',
+                    'media_file__albumtrack',
+                    'media_file__albumtrack__album',
+                ).order_by('order')
+            )
+
+            if queue:
+                 first_queue_item= queue[0]
         else:
             queue = []
 
         context['queue'] = queue
-        context['current_time'] = datetime.now()
+        context['first_queue_item'] = first_queue_item
         return context
 
 
@@ -383,6 +390,47 @@ class DevelopmentView(BasePostView):
 
 class MenuView(BaseView):
     template_name = 'menu.html'
+
+
+class AudioStreamView(View):
+
+    @staticmethod
+    def stream_data(file_path: str) -> Iterator[bytes]:
+        print("ADD CHECKS TO AVOID LOCAL FILE INCLUSION")
+        with open(file_path, 'rb') as in_file:
+            while True:
+                content_bytes = in_file.read(1024)
+                if len(content_bytes) == 0:
+                    break
+                yield content_bytes
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk') or 0
+        if not pk:
+            return error_response(
+                request,
+                ApiError("No pk provided")
+            )
+
+        try:
+            media_file = MediaFile.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            return error_response(
+                request,
+                ApiError(f"Media file ({pk=}) not found")
+            )
+
+        if not media_file.is_audio:
+            return error_response(
+                request,
+                ApiError(f"Media file ({pk=}) is not audio")
+            )
+
+
+        return StreamingHttpResponse(
+            self.stream_data(media_file.file_path),
+            content_type='audio/ogg',
+        )
 
 
 

@@ -4,8 +4,42 @@
 
 CONTEXT VARIABLES
 -----------------
+MediaFile:  MediaFile class for constants
+queue:      Iterable of QueueItems
+first_queue_item:   first QueueItem of the Queue (may be None)
 
 {% endcomment %}
+
+{% block extra_javascript %}
+    <script>
+
+        function dropdownTriggerClicked(event) {
+          event.stopPropagation();
+          $(event.target).parents('.dropdown').toggleClass('is-active')
+        }
+
+        function documentClicked(event) {
+          const dropdowns = document.querySelectorAll('.dropdown');
+          for(const dropdown of dropdowns) {
+            dropdown.classList.remove('is-active');
+          }
+        }
+
+        function windowOnLoad(event) {
+          const dropdownTriggers =  document.querySelectorAll(
+            '.dropdown-trigger'
+          );
+          for(const dropdownTrigger of dropdownTriggers) {
+            dropdownTrigger.addEventListener('click', dropdownTriggerClicked);
+          }
+          document.addEventListener('click', documentClicked);
+        }
+
+        window.addEventListener('load', windowOnLoad);
+
+    </script>
+{% endblock %}
+
 
 {% block main %}
 
@@ -14,7 +48,19 @@ CONTEXT VARIABLES
   <article id="now-playing-panel" class="panel is-primary ">
     <p class="panel-heading">Now Playing:</p>
     <div class="panel-block">
-      <audio></audio>
+      {% if first_queue_item %}
+        {% with media_file=first_queue_item.media_file %}
+          {% if media_file.is_audio %}
+            <audio controls id="av-element" src="{% url 'audio_stream' media_file.pk %}"></audio>
+          {% elif media_file.is_video %}
+            <video id="av-element"></video>
+          {% else %}
+            <p>Unsupported media type</p>
+          {% endif %}
+        {% endwith %}
+      {% else %}
+        <p>No items in queue</p>
+      {% endif %}
     </div>
     <div id="now-playing-controls" class="panel-block">
       <button class="button is-primary">
@@ -61,7 +107,7 @@ CONTEXT VARIABLES
 
   <article id="queue-panel" class="panel is-primary">
     <div class="panel-heading">
-      <div class="dropdown is-active">
+      <div class="dropdown">
         <div class="dropdown-trigger">
           <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
             <span>Queue</span>
@@ -72,9 +118,9 @@ CONTEXT VARIABLES
         </div>
         <div class="dropdown-menu" id="dropdown-menu" role="menu">
           <div class="dropdown-content">
-            <a href="#" class="dropdown-item">Queue</a>
+            <a href="#placeholder_queue" class="dropdown-item">Queue</a>
             <hr class="dropdown-divider"/>
-            <a href="#" class="dropdown-item">New Playlist</a>
+            <a href="#placeholder_new_playlist" class="dropdown-item">New Playlist</a>
           </div>
         </div>
       </div>
@@ -146,5 +192,6 @@ CONTEXT VARIABLES
 </div>
 
 {% endblock %}
+
 
 

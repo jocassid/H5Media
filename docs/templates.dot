@@ -1,15 +1,22 @@
 digraph H5MediaTemplates {
-		node [shape=none margin=0];
+		node [shape=rectangle];
 
     label="H5Media Templates";
+    rankdir=BT;
 
     subgraph cluster_h5media{
         label="H5Media";
 
-        "mobile/css_and_javascript.html" [label=<<table cellborder="1" cellspacing="0">
-          <tr><td bgcolor="lightblue"><b>css_and_javascript.html</b></td></tr>
-          <tr><td></td></tr>
-        </table>>];
+        "h5media/css_and_javascript.html" [label="css_and_javascript.html\n(jquery and html js)"];
+        "h5media/home.html" [label="home.html"];
+        "h5media/base.html" [label="base.html\n(nav bar)"];
+        "h5media/css.html" [label="css.html\n(fontawesome, bulma, and custom css)"];
+
+        "h5media/home.html" -> "h5media/base.html" [arrowhead="empty"];
+				"h5media/base.html" -> "h5media/css_and_javascript.html" [arrowhead="empty"];
+				"h5media/css_and_javascript.html" -> "h5media/css.html" [dir=back arrowtail=diamond];
+
+
     }
 
     subgraph cluster_mobile{
@@ -25,9 +32,7 @@ digraph H5MediaTemplates {
           <tr><td>Renders currently playing file and the queue</td></tr>
         </table>>];
 
-        "mobile/base.html" -> "mobile/home.html";
-    }
 
-    "mobile/css_and_javascript.html" -> "mobile/base.html";
+    }
 
 }

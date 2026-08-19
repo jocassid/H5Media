@@ -102,11 +102,19 @@ class MediaFile(BaseModel):
     TYPE_PODCAST_EPISODE = 'e'
     TYPE_AUDIOBOOK_CHAPTER = 'c'
     TYPE_ALBUM_TRACK = 't'
+    TYPE_VIDEO = 'v'
+
+    AUDIO_TYPES = {
+        TYPE_PODCAST_EPISODE,
+        TYPE_AUDIOBOOK_CHAPTER,
+        TYPE_ALBUM_TRACK,
+    }
 
     TYPE_CHOICES = (
         (TYPE_PODCAST_EPISODE, 'Podcast Episode'),
         (TYPE_AUDIOBOOK_CHAPTER, 'Audiobook Chapter'),
         (TYPE_ALBUM_TRACK, 'Album Track'),
+        (TYPE_VIDEO, 'Video'),
     )
 
     type = CharField(
@@ -118,6 +126,14 @@ class MediaFile(BaseModel):
 
     def __str__(self):
         return self.title
+
+    @property
+    def is_audio(self):
+        return self.type in self.AUDIO_TYPES
+
+    @property
+    def is_video(self):
+        return self.type == self.TYPE_VIDEO
 
 
 class QueueItem(BaseModel):
